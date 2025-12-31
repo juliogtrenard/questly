@@ -1,6 +1,8 @@
 .features-section {
+    margin: 0 auto;
     padding: 2rem 1rem;
     background: linear-gradient(to bottom, transparent, #ffdf000d, transparent);
+    max-width: 1600px;
 }
 
 .features-title {

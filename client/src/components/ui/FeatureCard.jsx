@@ -21,7 +21,7 @@ export const FeatureCard = ({ Icon, title, description }) => {
             transition={{ delay: 0.1 }}
             className="feature-item"
         >
-            <div className="card">
+            <article className="card">
                 <div className="card-content">
                     <div className="icon-container">
                         <Icon className="icon" />
@@ -29,7 +29,7 @@ export const FeatureCard = ({ Icon, title, description }) => {
                     <h3 className="feature-title">{title}</h3>
                     <p className="feature-description">{description}</p>
                 </div>
-            </div>
+            </article>
         </motion.div>
     );
 };
