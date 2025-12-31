@@ -1,0 +1,121 @@
+.cta-section {
+    padding-top: 4rem;
+    padding-bottom: 4rem;
+    margin: 0 1rem;
+}
+
+.cta-content {
+    position: relative;
+    overflow: hidden;
+    border-radius: 1rem;
+    border: 1px solid var(--gold);
+    padding: 2rem;
+    text-align: center;
+    background: linear-gradient(
+        135deg,
+        rgba(255, 223, 0, 0.2),
+        rgba(220, 200, 180, 0.1)
+    );
+}
+
+.cta-content::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(
+        ellipse at center,
+        rgba(255, 223, 0, 0.1),
+        transparent 70%
+    );
+    z-index: 0;
+}
+
+.cta-inner {
+    position: relative;
+    z-index: 1;
+}
+
+.cta-icon {
+    color: var(--gold);
+    width: 4rem;
+    height: 4rem;
+}
+
+.cta-title {
+    font-size: 1.875rem;
+    color: var(--gold);
+    margin-bottom: 1rem;
+}
+
+.cta-description {
+    font-size: 1rem;
+    color: var(--muted-foreground);
+    margin-bottom: 2rem;
+    max-width: 36rem;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.cta-button-text {
+    display: inline-block;
+    background-color: var(--gold);
+    color: var(--foreground);
+    border-radius: 0.5rem;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+    color: var(--background);
+    font-size: 1.2rem;
+    padding: 1rem 2.2rem;
+}
+
+.cta-button-text:hover {
+    background-color: var(--gold-dark);
+}
+
+/* Responsive */
+@media (min-width: 768px) {
+    .cta-section {
+        margin: 0 2rem;
+    }
+
+    .cta-content {
+        padding: 3rem;
+    }
+
+    .cta-title {
+        font-size: 2.25rem;
+    }
+
+    .cta-description {
+        font-size: 1.125rem;
+    }
+
+    .cta-button-text {
+        font-size: 1.5rem;
+        padding: 1.25rem 2.5rem;
+    }
+}
+
+@media (min-width: 1024px) {
+    .cta-section {
+        margin: 0 4rem;
+    }
+
+    .cta-content {
+        padding: 4rem;
+    }
+
+    .cta-title {
+        font-size: 2.5rem;
+    }
+
+    .cta-description {
+        font-size: 1.25rem;
+    }
+
+    .cta-button-text {
+        font-size: 1.75rem;
+        padding: 1.5rem 3rem;
+    }
+}

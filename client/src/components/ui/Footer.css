@@ -1,0 +1,13 @@
+/* Footer */
+.footer {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+    border-top: 1px solid var(--gold-dark);
+    background-color: var(--background);
+}
+
+.footer-text {
+    font-size: 0.875rem;
+    color: var(--gold-dark);
+    text-align: center;
+}

@@ -1,0 +1,135 @@
+/* Header general */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    background-color: var(--blue-dark);
+    color: #fff;
+    position: relative;
+    border-bottom: 1px solid var(--gold-dark);
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+}
+
+.logo-link {
+    display: flex;
+    align-items: center;
+    font-size: 1.8rem;
+    font-weight: bold;
+    text-decoration: none;
+    color: var(--gold-dark);
+}
+
+.logo-icon {
+    margin-right: 0.5rem;
+}
+
+/* Desktop nav */
+.nav-buttons {
+    display: flex;
+    gap: 1rem;
+}
+
+.btn {
+    font-size: 1rem;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
+}
+
+.btn .auth-icons,
+.btn span {
+    color: var(--gold-dark);
+}
+
+.nav-buttons .btn {
+    padding: 0.5rem 1rem;
+    border: 1px solid var(--gold-dark);
+    cursor: pointer;
+    border-radius: 5px;
+    background-color: transparent;
+    font-weight: 500;
+    transition: border 0.2s;
+}
+
+.nav-buttons .btn:hover {
+    border: 1px solid var(--gold);
+}
+
+.nav-buttons .btn.btn-primary {
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    border-radius: 5px;
+    background-color: var(--gold-dark);
+    font-weight: 500;
+    transition: background-color 0.2s;
+}
+
+.btn.btn-primary .auth-icons,
+.btn.btn-primary span {
+    color: var(--background);
+}
+
+.nav-buttons .btn-primary {
+    color: var(--background);
+}
+
+.nav-buttons .btn-primary:hover {
+    background-color: var(--gold);
+}
+
+/* Icono menu movil */
+.mobile-menu-icon {
+    display: none;
+    cursor: pointer;
+    color: var(--gold-dark);
+}
+
+/* Desplegable movil */
+.mobile-menu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background-color: var(--blue-dark);
+    display: flex;
+    flex-direction: column;
+    width: 180px;
+    padding: 1rem;
+    gap: 0.5rem;
+    border-radius: 0 0 8px 8px;
+    z-index: 50;
+    align-items: center;
+}
+
+/* Desplegable movil links */
+.mobile-menu .mobile-link {
+    display: block;
+    width: 100%;
+    padding: 0.5rem 0;
+    color: var(--gold-dark);
+    text-decoration: none;
+    text-align: center;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.mobile-menu .mobile-link:hover {
+    background-color: #333;
+    border-radius: 4px;
+}
+
+@media (max-width: 768px) {
+    .nav-buttons {
+        display: none;
+    }
+    .mobile-menu-icon {
+        display: block;
+    }
+}
