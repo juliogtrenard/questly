@@ -1,21 +1,45 @@
-import { useAuth } from "../../context/AuthContext";
-import { useNavigate } from "react-router";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "../../firebase/firebaseConfig";
+import { BentoCard } from "../../components/admin/BentoCard";
 
+/**
+ * Componente que muestra el Dashboard de administración.
+ * Este componente se encarga de mostrar las métricas.
+ *
+ * @component
+ * @returns {JSX.Element} Vista del Dashboard de administración
+ */
 export const AdminDashboard = () => {
-    const { user, logout } = useAuth();
-    const navigate = useNavigate();
+    /**
+     * Estado que guarda el número de clases disponibles en la base de datos.
+     * @type {number}
+     */
+    const [classCount, setClassCount] = useState(0);
 
+    /**
+     * Se ejecuta una sola vez al cargar el componente.
+     * Obtiene el número total de clases desde Firestore y actualiza el estado 'classCount'.
+     */
     useEffect(() => {
-        if (!user) navigate("/login");
-    }, [user]);
+        const fetchData = async () => {
+            const snapshot = await getDocs(collection(db, "classes"));
+            setClassCount(snapshot.size);
+        };
+
+        fetchData();
+    }, []);
 
     return (
-        <div style={{ padding: "2rem" }}>
-            <h2>Panel de Administración</h2>
-            <p>Bienvenido, {user?.username || user?.email}</p>
-            <p>Tu rol: {user?.role}</p>
-            <button onClick={logout}>Cerrar sesión</button>
-        </div>
+        <>
+            <h1>Dashboard</h1>
+
+            <div className="bento-grid">
+                <BentoCard title="Clases disponibles" value={classCount} />
+                <BentoCard title="Eventos creados" value="—" />
+                <BentoCard title="Usuarios" value="—" />
+                <BentoCard title="Partidas" value="—" />
+            </div>
+        </>
     );
 };

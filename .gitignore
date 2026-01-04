@@ -19,12 +19,12 @@ lerna-debug.log*
 *.sw?
 
 # Node
-node_modules
+**/node_modules/
 .pnp.*
 .yarn/
 
 # Env
-.env
+**/.env
 .env.*
 
 # Build

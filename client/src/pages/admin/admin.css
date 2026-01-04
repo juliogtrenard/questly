@@ -1,0 +1,162 @@
+.admin-layout {
+    display: flex;
+    min-height: 100vh;
+}
+
+.admin-sidebar {
+    width: 240px;
+    background-color: var(--blue);
+    color: var(--foreground);
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border-right: 1px solid var(--parchment-dark);
+}
+
+.admin-top {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.admin-bottom {
+    margin-top: auto;
+}
+
+.admin-user {
+    margin-bottom: 2rem;
+}
+
+.admin-username {
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    gap: 10px;
+    font-weight: bold;
+    font-size: 1.4rem;
+}
+
+.admin-username .data {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.admin-username .data span:first-child {
+    color: var(--gold-dark);
+}
+
+.admin-username svg {
+    width: 60px;
+    height: 60px;
+    stroke: var(--gold-dark);
+}
+
+.admin-role {
+    font-size: 0.85rem;
+    color: var(--muted-foreground);
+}
+
+.logout-btn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: none;
+    border: none;
+    color: var(--crimson-light);
+    padding: 0.5rem;
+    cursor: pointer;
+    border-radius: 6px;
+    font-size: 0.95rem;
+}
+
+.logout-btn:hover {
+    background-color: var(--blue-dark);
+}
+
+.admin-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.admin-nav a {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--foreground);
+    text-decoration: none;
+    padding: 0.5rem;
+    border-radius: 6px;
+}
+
+.admin-nav a.active,
+.admin-nav a:hover {
+    background-color: var(--blue-dark);
+}
+
+.admin-content {
+    flex: 1;
+    padding: 2rem;
+}
+
+.admin-content h1 {
+    color: var(--gold-dark);
+    margin-bottom: 10px;
+}
+
+.admin-content .sub-text {
+    color: var(--muted-foreground);
+    margin-bottom: 30px;
+}
+
+.admin-content h3 {
+    color: var(--foreground);
+}
+
+.admin-content .value {
+    color: var(--gold-dark);
+    font-size: 1.6rem;
+    font-style: italic;
+}
+
+.bento-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+}
+
+.bento-card {
+    background: var(--blue);
+    padding: 1.5rem;
+    border-radius: 12px;
+    border: 1px solid var(--gold-dark);
+    box-shadow: 0 4px 12px rgba(214, 214, 214, 0.08);
+}
+
+.admin-page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.primary-btn {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    background: var(--gold-dark);
+    color: var(--background);
+    border: none;
+    padding: 0.6rem 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.4s;
+}
+
+.primary-btn:hover {
+    background-color: var(--gold);
+}

@@ -5,6 +5,9 @@ import { Login } from "../pages/public/Login";
 import { Register } from "../pages/public/Register";
 import { Dashboard } from "../pages/user/Dashboard";
 import { AdminDashboard } from "../pages/admin/AdminDashboard";
+import { AdminClasses } from "../pages/admin/AdminClasses";
+import { AdminEvents } from "../pages/admin/AdminEvents";
+import { AdminLayout } from "../pages/admin/layout/AdminLayout";
 import { ProtectedRoute } from "../components/routes/ProtectedRoute";
 
 /**
@@ -110,10 +113,19 @@ export const AppRoutes = () => {
                     path="/admin"
                     element={
                         <ProtectedRoute role="admin">
-                            <AdminDashboard />
+                            <AdminLayout />
                         </ProtectedRoute>
                     }
-                />
+                >
+                    {/* /admin */}
+                    <Route index element={<AdminDashboard />} />
+
+                    {/* /admin/class */}
+                    <Route path="class" element={<AdminClasses />} />
+
+                    {/* /admin/event */}
+                    <Route path="event" element={<AdminEvents />} />
+                </Route>
 
                 {/* =====================
                     FALLBACK
