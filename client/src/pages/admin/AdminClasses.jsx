@@ -5,6 +5,7 @@ import { Plus } from "lucide-react";
 import { AnimatePresence } from "framer-motion";
 import { ClassCard } from "../../components/admin/ClassCard";
 import { CreateClassModal } from "../../components/admin/CreateClassModal";
+import { Loader } from "../../components/ui/Loader";
 
 /**
  * Componente para gestionar las clases en el panel de administración.
@@ -98,7 +99,7 @@ export const AdminClasses = () => {
             <div className="admin-page-header">
                 <div>
                     <h1>Gestión de clases</h1>
-                    <p>Administra las clases disponibles</p>
+                    <p>Crea y administra las clases disponibles</p>
                 </div>
 
                 <button
@@ -111,7 +112,7 @@ export const AdminClasses = () => {
             </div>
 
             {loading ? (
-                <p>Cargando...</p>
+                <Loader />
             ) : (
                 <div className="bento-grid">
                     {classes.map((c) => (

@@ -5,6 +5,7 @@ import { EventCard } from "../../components/admin/EventCard";
 import { CreateEventModal } from "../../components/admin/CreateEventModal";
 import { collection, getDocs, doc, deleteDoc } from "firebase/firestore";
 import { db } from "../../firebase/firebaseConfig";
+import { Loader } from "../../components/ui/Loader";
 
 /**
  * Componente AdminEvents
@@ -24,6 +25,12 @@ export const AdminEvents = () => {
      * @type {[boolean, Function]}
      */
     const [showModal, setShowModal] = useState(false);
+
+    /**
+     * Estado que indica si los datos de los eventos están cargando.
+     * @type {boolean}
+     */
+    const [loading, setLoading] = useState(true);
 
     /**
      * Lista de eventos cargados desde Firestore
@@ -58,6 +65,7 @@ export const AdminEvents = () => {
         }));
 
         setEvents(eventsData);
+        setLoading(false);
     };
 
     /**
@@ -124,16 +132,21 @@ export const AdminEvents = () => {
                 </button>
             </div>
 
-            <div className="bento-grid">
-                {events.map((ev) => (
-                    <EventCard
-                        key={ev.docId}
-                        data={ev}
-                        onEdit={handleEdit}
-                        onDelete={handleDelete}
-                    />
-                ))}
-            </div>
+            {loading ? (
+                <Loader />
+            ) : (
+                <div className="bento-grid">
+                    {events.map((ev) => (
+                        <EventCard
+                            key={ev.docId}
+                            data={ev}
+                            onEdit={handleEdit}
+                            onDelete={handleDelete}
+                        />
+                    ))}
+                </div>
+            )}
+
             <AnimatePresence>
                 {showModal && (
                     <CreateEventModal

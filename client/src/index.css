@@ -87,3 +87,12 @@ a {
 ::-webkit-scrollbar-thumb:hover {
     background: var(--gold-dark);
 }
+
+/* Estilos del Loader */
+.loader-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 200px;
+    color: var(--gold-dark);
+}
