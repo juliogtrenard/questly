@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { collection, getDocs, deleteDoc, doc } from "firebase/firestore";
 import { db } from "../../firebase/firebaseConfig";
 import { Plus } from "lucide-react";
+import { AnimatePresence } from "framer-motion";
 import { ClassCard } from "../../components/admin/ClassCard";
 import { CreateClassModal } from "../../components/admin/CreateClassModal";
 
@@ -123,16 +124,18 @@ export const AdminClasses = () => {
                     ))}
                 </div>
             )}
-
-            <CreateClassModal
-                open={showModal}
-                classData={selectedClass} // null = crear, objeto = editar
-                onClose={() => {
-                    setShowModal(false);
-                    setSelectedClass(null);
-                    fetchClasses(); // recargar después de crear/editar
-                }}
-            />
+            <AnimatePresence>
+                {showModal && (
+                    <CreateClassModal
+                        classData={selectedClass}
+                        onClose={() => {
+                            setShowModal(false);
+                            setSelectedClass(null);
+                            fetchClasses();
+                        }}
+                    />
+                )}
+            </AnimatePresence>
         </>
     );
 };

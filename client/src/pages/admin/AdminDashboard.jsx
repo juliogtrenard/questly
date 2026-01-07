@@ -18,15 +18,35 @@ export const AdminDashboard = () => {
     const [classCount, setClassCount] = useState(0);
 
     /**
+     * Estado que guarda el número de eventos disponibles en la base de datos.
+     * @type {number}
+     */
+    const [eventCount, setEventCount] = useState(0);
+
+    /**
+     * Estado que guarda el número de usuarios disponibles en la base de datos.
+     * @type {number}
+     */
+    const [userCount, setUserCount] = useState(0);
+
+    /**
+     * Obtiene el número total de clases, eventos y usuarios desde Firestore y actualiza sus estados.
+     */
+    const fetchData = async () => {
+        const snapshotClasses = await getDocs(collection(db, "classes"));
+        setClassCount(snapshotClasses.size);
+
+        const snapshotEvents = await getDocs(collection(db, "events"));
+        setEventCount(snapshotEvents.size);
+
+        const snapshotUsers = await getDocs(collection(db, "users"));
+        setUserCount(snapshotUsers.size);
+    };
+
+    /**
      * Se ejecuta una sola vez al cargar el componente.
-     * Obtiene el número total de clases desde Firestore y actualiza el estado 'classCount'.
      */
     useEffect(() => {
-        const fetchData = async () => {
-            const snapshot = await getDocs(collection(db, "classes"));
-            setClassCount(snapshot.size);
-        };
-
         fetchData();
     }, []);
 
@@ -36,8 +56,8 @@ export const AdminDashboard = () => {
 
             <div className="bento-grid">
                 <BentoCard title="Clases disponibles" value={classCount} />
-                <BentoCard title="Eventos creados" value="—" />
-                <BentoCard title="Usuarios" value="—" />
+                <BentoCard title="Eventos creados" value={eventCount} />
+                <BentoCard title="Usuarios" value={userCount} />
                 <BentoCard title="Partidas" value="—" />
             </div>
         </>

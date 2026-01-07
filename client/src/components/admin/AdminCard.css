@@ -30,6 +30,21 @@
     font-style: italic;
 }
 
+.event-options {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+}
+
+.event-option {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    color: var(--gold-dark);
+    font-style: italic;
+}
+
 .card-actions {
     position: absolute;
     top: 10px;

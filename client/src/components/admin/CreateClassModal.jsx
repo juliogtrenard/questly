@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
 import { addDoc, updateDoc, doc, collection } from "firebase/firestore";
-import { db } from "../../firebase/firebaseConfig";
 import { X } from "lucide-react";
-import "./CreateClassModal.css";
+import { motion } from "framer-motion";
+import { db } from "../../firebase/firebaseConfig";
+import "./AdminModal.css";
 
 /**
  * Componente CreateClassModal
@@ -12,12 +13,11 @@ import "./CreateClassModal.css";
  *
  * @component
  * @param {Object} props - Props del componente
- * @param {boolean} props.open - Indica si el modal está visible
  * @param {Function} props.onClose - Función para cerrar el modal
  * @param {Object|null} props.classData - Datos de la clase a editar (null si se crea)
  * @returns {JSX.Element|null} Modal de creación / edición de clase
  */
-export const CreateClassModal = ({ open, onClose, classData }) => {
+export const CreateClassModal = ({ onClose, classData }) => {
     /**
      * Indica si el modal está en modo edición.
      * Será true cuando exista classData.
@@ -69,7 +69,7 @@ export const CreateClassModal = ({ open, onClose, classData }) => {
                 perception: 0,
             });
         }
-    }, [classData, isEdit, open]);
+    }, [classData, isEdit]);
 
     /**
      * Actualiza una estadística específica manteniendo el resto del estado.
@@ -123,14 +123,20 @@ export const CreateClassModal = ({ open, onClose, classData }) => {
         }
     };
 
-    /**
-     * Si el modal no está abierto, no se renderiza nada
-     */
-    if (!open) return null; // No se renderiza si no está abierto
-
     return (
-        <div className="modal-overlay">
-            <div className="modal-content">
+        <motion.div
+            className="modal-overlay"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+        >
+            <motion.div
+                className="modal-content"
+                initial={{ scale: 0.9, opacity: 0, y: 60 }}
+                animate={{ scale: 1, opacity: 1, y: 0 }}
+                exit={{ scale: 0.9, opacity: 0, y: 60 }}
+                transition={{ duration: 0.3, ease: "easeOut" }}
+            >
                 <button className="modal-close" onClick={onClose}>
                     <X size={20} />
                 </button>
@@ -160,7 +166,9 @@ export const CreateClassModal = ({ open, onClose, classData }) => {
                                 </label>
                                 <input
                                     type="number"
-                                    value={value}
+                                    min="0"
+                                    placeholder="Valor mínimo"
+                                    value={value || ""}
                                     onChange={(e) =>
                                         handleStatChange(stat, e.target.value)
                                     }
@@ -173,7 +181,7 @@ export const CreateClassModal = ({ open, onClose, classData }) => {
                         {isEdit ? "Guardar cambios" : "Crear clase"}
                     </button>
                 </form>
-            </div>
-        </div>
+            </motion.div>
+        </motion.div>
     );
 };

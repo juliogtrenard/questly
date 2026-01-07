@@ -15,9 +15,12 @@
     background: var(--blue-dark);
     padding: 2rem;
     border-radius: 10px;
-    width: 500px;
-    max-width: 90%;
+    border: 1px solid var(--gold-dark);
+    width: 600px;
+    max-width: 95%;
     position: relative;
+    max-height: 90vh;
+    overflow-y: auto;
 }
 
 .modal-close {
@@ -31,11 +34,15 @@
 }
 
 .modal-form input,
-.modal-form textarea {
+.modal-form textarea,
+.modal-form select {
     width: 100%;
     padding: 0.5rem;
     margin-bottom: 1rem;
     border-radius: 4px;
+    background: var(--blue-light);
+    color: var(--foreground);
+    border: 1px solid var(--gold-dark);
 }
 
 .stats-grid {
@@ -49,6 +56,35 @@
     width: 100%;
 }
 
+.option-block {
+    border: 1px solid var(--gold-dark);
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    background: var(--blue);
+    position: relative;
+}
+
+.add-option-btn,
+.remove-option-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    background: var(--gold-dark);
+    color: var(--background);
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+    margin-bottom: 1rem;
+}
+
+.add-option-btn:hover,
+.remove-option-btn:hover {
+    background: var(--gold);
+}
+
 .modal-btn {
     background: var(--gold-dark);
     color: var(--background);
@@ -58,6 +94,7 @@
     cursor: pointer;
     transition: 0.3s;
     width: 100%;
+    margin-top: 1rem;
 }
 
 .modal-btn:hover {
@@ -67,4 +104,8 @@
 .error {
     color: var(--gold-dark);
     margin-bottom: 1rem;
+}
+
+select:focus {
+    background-color: var(--blue);
 }

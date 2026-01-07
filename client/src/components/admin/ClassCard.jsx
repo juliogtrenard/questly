@@ -8,7 +8,7 @@ import {
     Footprints,
     Eye,
 } from "lucide-react";
-import "./ClassCard.css";
+import "./AdminCard.css";
 
 /**
  * Componente ClassCard
