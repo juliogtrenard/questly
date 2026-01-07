@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { Plus } from "lucide-react";
 import { AnimatePresence } from "framer-motion";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { EventCard } from "../../components/admin/EventCard";
 import { CreateEventModal } from "../../components/admin/CreateEventModal";
 import { collection, getDocs, doc, deleteDoc } from "firebase/firestore";
@@ -91,6 +93,9 @@ export const AdminEvents = () => {
     const handleDelete = async (event) => {
         if (confirm("¿Seguro que quieres eliminar este evento?")) {
             await deleteDoc(doc(db, "events", event.docId));
+            toast.success("Evento eliminado correctamente", {
+                theme: "dark",
+            });
             fetchEvents();
         }
     };
@@ -160,6 +165,8 @@ export const AdminEvents = () => {
                     />
                 )}
             </AnimatePresence>
+
+            <ToastContainer position="top-right" autoClose={3000} />
         </>
     );
 };

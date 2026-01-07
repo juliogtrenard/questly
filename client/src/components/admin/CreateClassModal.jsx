@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { addDoc, updateDoc, doc, collection } from "firebase/firestore";
 import { X } from "lucide-react";
 import { motion } from "framer-motion";
+import { toast } from "react-toastify";
 import { db } from "../../firebase/firebaseConfig";
 import "./AdminModal.css";
 
@@ -107,12 +108,20 @@ export const CreateClassModal = ({ onClose, classData }) => {
                     description,
                     stats,
                 });
+
+                toast.success("Clase editada correctamente", {
+                    theme: "dark",
+                });
             } else {
                 // Crear nueva clase
                 await addDoc(collection(db, "classes"), {
                     name,
                     description,
                     stats,
+                });
+
+                toast.success("Clase creada correctamente", {
+                    theme: "dark",
                 });
             }
 

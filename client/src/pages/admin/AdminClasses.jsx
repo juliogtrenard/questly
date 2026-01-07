@@ -3,6 +3,8 @@ import { collection, getDocs, deleteDoc, doc } from "firebase/firestore";
 import { db } from "../../firebase/firebaseConfig";
 import { Plus } from "lucide-react";
 import { AnimatePresence } from "framer-motion";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { ClassCard } from "../../components/admin/ClassCard";
 import { CreateClassModal } from "../../components/admin/CreateClassModal";
 import { Loader } from "../../components/ui/Loader";
@@ -83,6 +85,9 @@ export const AdminClasses = () => {
         if (!confirm) return;
 
         await deleteDoc(doc(db, "classes", c.id));
+        toast.success("Clase eliminada correctamente", {
+            theme: "dark",
+        });
         fetchClasses();
     };
 
@@ -137,6 +142,8 @@ export const AdminClasses = () => {
                     />
                 )}
             </AnimatePresence>
+
+            <ToastContainer position="top-right" autoClose={3000} />
         </>
     );
 };

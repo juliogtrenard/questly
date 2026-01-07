@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { X } from "lucide-react";
 import { motion } from "framer-motion";
+import { toast } from "react-toastify";
 import { addDoc, collection, doc, updateDoc } from "firebase/firestore";
 import { db } from "../../firebase/firebaseConfig";
 import "./AdminModal.css";
@@ -153,8 +154,16 @@ export const CreateEventModal = ({
         try {
             if (event && event.docId) {
                 await updateDoc(doc(db, "events", event.docId), payload);
+
+                toast.success("Evento editado correctamente", {
+                    theme: "dark",
+                });
             } else {
                 await addDoc(collection(db, "events"), payload);
+
+                toast.success("Evento creado correctamente", {
+                    theme: "dark",
+                });
             }
             onSaved();
         } catch (err) {
