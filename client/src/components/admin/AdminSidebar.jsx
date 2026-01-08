@@ -60,12 +60,12 @@ export const AdminSidebar = () => {
 
                     <NavLink to="/admin/class">
                         <Sword size={18} />
-                        Crear clase
+                        Clases
                     </NavLink>
 
                     <NavLink to="/admin/event">
                         <ScrollText size={18} />
-                        Crear evento
+                        Eventos
                     </NavLink>
                 </nav>
             </div>
