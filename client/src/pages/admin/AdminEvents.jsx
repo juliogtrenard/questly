@@ -8,6 +8,7 @@ import { CreateEventModal } from "../../components/admin/CreateEventModal";
 import { collection, getDocs, doc, deleteDoc } from "firebase/firestore";
 import { db } from "../../firebase/firebaseConfig";
 import { Loader } from "../../components/ui/Loader";
+import { DeleteModal } from "../../components/ui/DeleteModal";
 
 /**
  * Componente AdminEvents
@@ -50,6 +51,19 @@ export const AdminEvents = () => {
     const [editingEvent, setEditingEvent] = useState(null);
 
     /**
+     * Estado que controla la visibilidad de la modal de eliminación.
+     * @type {boolean}
+     */
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+
+    /**
+     * Estado que almacena el evento seleccionado para ser eliminado.
+     * Inicialmente es null, lo que significa que no hay un evento seleccionado.
+     * @type {Object|null}
+     */
+    const [eventToDelete, setEventToDelete] = useState(null);
+
+    /**
      * Obtiene todos los eventos desde Firestore
      * y los guarda en el estado.
      *
@@ -82,22 +96,28 @@ export const AdminEvents = () => {
     };
 
     /**
-     * Elimina un evento de Firestore tras confirmación del usuario
-     * y recarga la lista de eventos.
+     * Función que se ejecuta cuando el usuario intenta eliminar un evento.
+     * Guarda el evento seleccionado en el estado y muestra
+     * la modal de confirmación de eliminación.
      *
-     * @async
-     * @param {Object} event - Evento a eliminar
-     * @param {string} event.docId - ID real del documento en Firestore
-     * @returns {Promise<void>}
+     * @param {Object} event - El evento seleccionado para eliminar.
      */
-    const handleDelete = async (event) => {
-        if (confirm("¿Seguro que quieres eliminar este evento?")) {
-            await deleteDoc(doc(db, "events", event.docId));
-            toast.success("Evento eliminado correctamente", {
-                theme: "dark",
-            });
-            fetchEvents();
-        }
+    const handleDelete = (event) => {
+        setEventToDelete(event);
+        setShowDeleteModal(true);
+    };
+
+    /**
+     * Función que se ejecuta cuando el usuario confirma la eliminación del evento.
+     * Elimina el evento de la base de datos y luego actualiza la lista de eventos.
+     *
+     * @param {Object} event - El evento que será eliminado de la base de datos.
+     * @returns {Promise<void>} - Una promesa
+     */
+    const confirmDelete = async (event) => {
+        await deleteDoc(doc(db, "events", event.docId));
+        toast.success("Evento eliminado correctamente", { theme: "dark" });
+        fetchEvents();
     };
 
     /**
@@ -162,6 +182,14 @@ export const AdminEvents = () => {
                         onSaved={handleSaved}
                         event={editingEvent}
                         existingEvents={events}
+                    />
+                )}
+
+                {showDeleteModal && eventToDelete && (
+                    <DeleteModal
+                        item={eventToDelete}
+                        onClose={() => setShowDeleteModal(false)}
+                        onConfirm={confirmDelete}
                     />
                 )}
             </AnimatePresence>

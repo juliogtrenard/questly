@@ -8,6 +8,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { ClassCard } from "../../components/admin/ClassCard";
 import { CreateClassModal } from "../../components/admin/CreateClassModal";
 import { Loader } from "../../components/ui/Loader";
+import { DeleteModal } from "../../components/ui/DeleteModal";
 
 /**
  * Componente para gestionar las clases en el panel de administración.
@@ -41,6 +42,19 @@ export const AdminClasses = () => {
      * @type {Object|null}
      */
     const [selectedClass, setSelectedClass] = useState(null); // null = crear, objeto = editar
+
+    /**
+     * Estado que controla la visibilidad de la modal de eliminación.
+     * @type {boolean}
+     */
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+
+    /**
+     * Estado que almacena la clase seleccionada para ser eliminada.
+     * Inicialmente es null, lo que significa que no hay una clase seleccionada.
+     * @type {Object|null}
+     */
+    const [classToDelete, setClassToDelete] = useState(null);
 
     /**
      * Obtiene las clases desde Firestore.
@@ -77,17 +91,27 @@ export const AdminClasses = () => {
     };
 
     /**
-     * Función para eliminar una clase de Firestore con una confirmación previa.
-     * @param {Object} c - Clase a eliminar
+     * Función que se ejecuta cuando el usuario intenta eliminar una clase.
+     * Esta función guarda la clase seleccionada en el estado
+     * y muestra la modal de confirmación de eliminación.
+     *
+     * @param {Object} c - La clase seleccionada para eliminar.
      */
-    const handleDelete = async (c) => {
-        const confirm = window.confirm(`¿Eliminar la clase "${c.name}"?`);
-        if (!confirm) return;
+    const handleDelete = (c) => {
+        setClassToDelete(c);
+        setShowDeleteModal(true);
+    };
 
-        await deleteDoc(doc(db, "classes", c.id));
-        toast.success("Clase eliminada correctamente", {
-            theme: "dark",
-        });
+    /**
+     * Función que se ejecuta cuando el usuario confirma la eliminación de una clase.
+     * Elimina la clase de la base de datos y luego actualiza la lista de clases.
+     *
+     * @param {Object} classData - Los datos de la clase que será eliminada de la base de datos.
+     * @returns {Promise<void>} - Una promesa.
+     */
+    const confirmDelete = async (classData) => {
+        await deleteDoc(doc(db, "classes", classData.id));
+        toast.success("Clase eliminada correctamente", { theme: "dark" });
         fetchClasses();
     };
 
@@ -139,6 +163,14 @@ export const AdminClasses = () => {
                             setSelectedClass(null);
                             fetchClasses();
                         }}
+                    />
+                )}
+
+                {showDeleteModal && classToDelete && (
+                    <DeleteModal
+                        item={classToDelete}
+                        onClose={() => setShowDeleteModal(false)}
+                        onConfirm={confirmDelete}
                     />
                 )}
             </AnimatePresence>

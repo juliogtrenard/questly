@@ -96,3 +96,36 @@ a {
     min-height: 200px;
     color: var(--gold-dark);
 }
+
+/* Modal de eliminar entidad */
+.modal-actions {
+    margin-top: 20px;
+}
+
+.cancel-btn,
+.confirm-btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.cancel-btn {
+    background: var(--foreground);
+    transition: 0.5s;
+}
+
+.confirm-btn {
+    background: var(--gold);
+    color: var(--background);
+    margin-right: 10px;
+    transition: 0.5s;
+}
+
+.confirm-btn:hover {
+    background: var(--gold-dark);
+}
+
+.cancel-btn:hover {
+    background: var(--muted-foreground);
+}
