@@ -3,6 +3,7 @@ import { Hero } from "../../components/ui/Hero";
 import { Features } from "../../components/ui/Features";
 import { CTA } from "../../components/ui/CTA";
 import { Footer } from "../../components/ui/Footer";
+import { Demo } from "../../components/ui/Demo";
 
 /**
  * Componente Landing.
@@ -24,6 +25,9 @@ export const Landing = () => {
 
             {/* Sección de características */}
             <Features />
+
+            {/* MockUp de las historias */}
+            <Demo />
 
             {/* Llamado a la acción */}
             <CTA />

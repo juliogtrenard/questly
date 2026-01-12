@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router";
 import {
     Pencil,
     Trash2,
@@ -7,6 +8,7 @@ import {
     Brain,
     Footprints,
     Eye,
+    Play,
 } from "lucide-react";
 import "../ui/DataCard.css";
 
@@ -31,6 +33,7 @@ import "../ui/DataCard.css";
  * @returns {JSX.Element} Un componente de tarjeta de personaje con botones de eliminar/editar.
  */
 export const CharacterCard = ({ data, onEdit, onDelete }) => {
+    const navigate = useNavigate();
     const { name, className, stats = {} } = data;
 
     const {
@@ -42,6 +45,18 @@ export const CharacterCard = ({ data, onEdit, onDelete }) => {
         perception = 0,
     } = stats;
 
+    const handlePlay = () => {
+        navigate("/dashboard/play", {
+            state: {
+                character: {
+                    id: data.id,
+                    name,
+                    stats,
+                },
+            },
+        });
+    };
+
     return (
         <div className="bento-card">
             <div className="card-actions">
@@ -50,6 +65,9 @@ export const CharacterCard = ({ data, onEdit, onDelete }) => {
                 </button>
                 <button onClick={() => onDelete(data)}>
                     <Trash2 size={16} />
+                </button>
+                <button onClick={handlePlay}>
+                    <Play size={16} />
                 </button>
             </div>
 

@@ -11,6 +11,7 @@ import { ProtectedRoute } from "../components/routes/ProtectedRoute";
 import { UserLayout } from "../pages/user/layout/UserLayout";
 import { UserDashboard } from "../pages/user/UserDashboard";
 import { UserCharacters } from "../pages/user/UserCharacters";
+import { Play } from "../pages/user/Play";
 
 /**
  * Componente AppRoutes.
@@ -114,6 +115,9 @@ export const AppRoutes = () => {
 
                     {/* /dashboard/characters */}
                     <Route path="characters" element={<UserCharacters />} />
+
+                    {/* /dashboard/play */}
+                    <Route path="play" element={<Play />} />
                 </Route>
 
                 {/* Dashboard de administrador */}
