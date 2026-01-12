@@ -5,6 +5,7 @@ import {
     ScrollText,
     LogOut,
     ShieldUser,
+    UserCog,
 } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
 
@@ -66,6 +67,11 @@ export const AdminSidebar = () => {
                     <NavLink to="/admin/event">
                         <ScrollText size={18} />
                         Eventos
+                    </NavLink>
+
+                    <NavLink to="/admin/users">
+                        <UserCog size={18} />
+                        Usuarios
                     </NavLink>
                 </nav>
             </div>

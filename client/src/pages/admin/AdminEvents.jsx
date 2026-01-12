@@ -116,7 +116,7 @@ export const AdminEvents = () => {
      */
     const confirmDelete = async (event) => {
         await deleteDoc(doc(db, "events", event.docId));
-        toast.success("Evento eliminado correctamente", { theme: "dark" });
+        toast.success("Evento eliminado", { theme: "dark" });
         fetchEvents();
     };
 

@@ -6,6 +6,7 @@ import { Register } from "../pages/public/Register";
 import { AdminDashboard } from "../pages/admin/AdminDashboard";
 import { AdminClasses } from "../pages/admin/AdminClasses";
 import { AdminEvents } from "../pages/admin/AdminEvents";
+import { AdminUsers } from "../pages/admin/AdminUsers";
 import { AdminLayout } from "../pages/admin/layout/AdminLayout";
 import { ProtectedRoute } from "../components/routes/ProtectedRoute";
 import { UserLayout } from "../pages/user/layout/UserLayout";
@@ -137,6 +138,9 @@ export const AppRoutes = () => {
 
                     {/* /admin/event */}
                     <Route path="event" element={<AdminEvents />} />
+
+                    {/* /admin/users */}
+                    <Route path="users" element={<AdminUsers />} />
                 </Route>
 
                 {/* =====================

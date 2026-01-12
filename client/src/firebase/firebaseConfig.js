@@ -9,7 +9,7 @@ import { getFirestore } from "firebase/firestore";
  *
  * @type {Object}
  */
-const firebaseConfig = {
+export const firebaseConfig = {
     /** Clave pública de la API de Firebase */
     apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
 
