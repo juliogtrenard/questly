@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { toast } from "react-toastify";
 import { addDoc, collection, doc, updateDoc } from "firebase/firestore";
 import { db } from "../../firebase/firebaseConfig";
-import "./AdminModal.css";
+import "../ui/DataModal.css";
 
 /**
  * Componente CreateEventModal
@@ -155,13 +155,13 @@ export const CreateEventModal = ({
             if (event && event.docId) {
                 await updateDoc(doc(db, "events", event.docId), payload);
 
-                toast.success("Evento editado correctamente", {
+                toast.success("Evento editado", {
                     theme: "dark",
                 });
             } else {
                 await addDoc(collection(db, "events"), payload);
 
-                toast.success("Evento creado correctamente", {
+                toast.success("Evento creado", {
                     theme: "dark",
                 });
             }

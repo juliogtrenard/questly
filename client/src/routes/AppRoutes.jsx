@@ -3,12 +3,14 @@ import { useAuth } from "../context/AuthContext";
 import { Landing } from "../pages/public/Landing";
 import { Login } from "../pages/public/Login";
 import { Register } from "../pages/public/Register";
-import { Dashboard } from "../pages/user/Dashboard";
 import { AdminDashboard } from "../pages/admin/AdminDashboard";
 import { AdminClasses } from "../pages/admin/AdminClasses";
 import { AdminEvents } from "../pages/admin/AdminEvents";
 import { AdminLayout } from "../pages/admin/layout/AdminLayout";
 import { ProtectedRoute } from "../components/routes/ProtectedRoute";
+import { UserLayout } from "../pages/user/layout/UserLayout";
+import { UserDashboard } from "../pages/user/UserDashboard";
+import { UserCharacters } from "../pages/user/UserCharacters";
 
 /**
  * Componente AppRoutes.
@@ -103,10 +105,16 @@ export const AppRoutes = () => {
                     path="/dashboard"
                     element={
                         <ProtectedRoute role="user">
-                            <Dashboard />
+                            <UserLayout />
                         </ProtectedRoute>
                     }
-                />
+                >
+                    {/* /dashboard */}
+                    <Route index element={<UserDashboard />} />
+
+                    {/* /dashboard/characters */}
+                    <Route path="characters" element={<UserCharacters />} />
+                </Route>
 
                 {/* Dashboard de administrador */}
                 <Route

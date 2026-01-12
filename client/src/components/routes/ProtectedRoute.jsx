@@ -1,5 +1,6 @@
 import { Navigate } from "react-router";
 import { useAuth } from "../../context/AuthContext";
+import { Loader } from "../ui/Loader";
 
 /**
  * Componente de ruta protegida.
@@ -29,7 +30,7 @@ export const ProtectedRoute = ({ children, role }) => {
      */
     const { user, loading } = useAuth();
 
-    if (loading) return <p>Cargando...</p>;
+    if (loading) return <Loader />;
 
     if (!user) return <Navigate to="/" replace />;
 

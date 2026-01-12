@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../../firebase/firebaseConfig";
-import { BentoCard } from "../../components/admin/BentoCard";
+import { BentoCard } from "../../components/ui/BentoCard";
 
 /**
  * Componente que muestra el Dashboard de administración.

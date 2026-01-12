@@ -1,7 +1,7 @@
 /**
  * Componente BentoCard
  *
- * Tarjeta para mostrar la información de las clases
+ * Tarjeta para mostrar la información de clases/eventos
  *
  * @component
  * @param {Object} props - Propiedades del componente

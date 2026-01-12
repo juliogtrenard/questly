@@ -8,7 +8,7 @@ import {
     Footprints,
     Eye,
 } from "lucide-react";
-import "./AdminCard.css";
+import "../ui/DataCard.css";
 
 /**
  * Componente ClassCard
@@ -43,10 +43,10 @@ export const ClassCard = ({ data, onEdit, onDelete }) => {
     return (
         <div className="bento-card">
             <div className="card-actions">
-                <button type="button" onClick={() => onEdit(data)}>
+                <button onClick={() => onEdit(data)}>
                     <Pencil size={16} />
                 </button>
-                <button type="button" onClick={() => onDelete(data)}>
+                <button onClick={() => onDelete(data)}>
                     <Trash2 size={16} />
                 </button>
             </div>

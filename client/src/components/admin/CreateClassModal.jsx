@@ -4,7 +4,7 @@ import { X } from "lucide-react";
 import { motion } from "framer-motion";
 import { toast } from "react-toastify";
 import { db } from "../../firebase/firebaseConfig";
-import "./AdminModal.css";
+import "../ui/DataModal.css";
 
 /**
  * Componente CreateClassModal
@@ -109,7 +109,7 @@ export const CreateClassModal = ({ onClose, classData }) => {
                     stats,
                 });
 
-                toast.success("Clase editada correctamente", {
+                toast.success("Clase editada", {
                     theme: "dark",
                 });
             } else {
@@ -120,7 +120,7 @@ export const CreateClassModal = ({ onClose, classData }) => {
                     stats,
                 });
 
-                toast.success("Clase creada correctamente", {
+                toast.success("Clase creada", {
                     theme: "dark",
                 });
             }

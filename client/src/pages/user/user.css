@@ -1,0 +1,162 @@
+.user-layout {
+    display: flex;
+    min-height: 100vh;
+}
+
+.user-sidebar {
+    width: 240px;
+    background-color: var(--blue);
+    color: var(--foreground);
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border-right: 1px solid var(--parchment-dark);
+}
+
+.user-top {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.user-bottom {
+    margin-top: auto;
+}
+
+.user-user {
+    margin-bottom: 2rem;
+}
+
+.user-username {
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    gap: 10px;
+    font-weight: bold;
+    font-size: 1.4rem;
+}
+
+.user-username .data {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.user-username .data span:first-child {
+    color: var(--gold-dark);
+}
+
+.user-username svg {
+    width: 60px;
+    height: 60px;
+    stroke: var(--gold-dark);
+}
+
+.user-role {
+    font-size: 0.85rem;
+    color: var(--muted-foreground);
+}
+
+.logout-btn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: none;
+    border: none;
+    color: var(--crimson-light);
+    padding: 0.5rem;
+    cursor: pointer;
+    border-radius: 6px;
+    font-size: 0.95rem;
+}
+
+.logout-btn:hover {
+    background-color: var(--blue-dark);
+}
+
+.user-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.user-nav a {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--foreground);
+    text-decoration: none;
+    padding: 0.5rem;
+    border-radius: 6px;
+}
+
+.user-nav a.active,
+.user-nav a:hover {
+    background-color: var(--blue-dark);
+}
+
+.user-content {
+    flex: 1;
+    padding: 2rem;
+}
+
+.user-content h1 {
+    color: var(--gold-dark);
+    margin-bottom: 10px;
+}
+
+.user-content .sub-text {
+    color: var(--muted-foreground);
+    margin-bottom: 30px;
+}
+
+.user-content h3 {
+    color: var(--foreground);
+}
+
+.user-content .value {
+    color: var(--gold-dark);
+    font-size: 1.6rem;
+    font-style: italic;
+}
+
+.bento-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+}
+
+.bento-card {
+    background: var(--blue);
+    padding: 1.5rem;
+    border-radius: 12px;
+    border: 1px solid var(--gold-dark);
+    box-shadow: 0 4px 12px rgba(214, 214, 214, 0.08);
+}
+
+.user-page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.primary-btn {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    background: var(--gold-dark);
+    color: var(--background);
+    border: none;
+    padding: 0.6rem 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.4s;
+}
+
+.primary-btn:hover {
+    background-color: var(--gold);
+}
