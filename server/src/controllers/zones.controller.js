@@ -2,7 +2,23 @@ const Zone = require("../models/zone.model");
 const World = require("../models/world.model");
 
 /**
- * Obtener todas las zonas. Puedes filtrar por mundo.
+ * @swagger
+ * /zones:
+ *   get:
+ *     summary: Obtener zonas (opcionalmente filtradas por mundo)
+ *     tags: [Zones]
+ *     parameters:
+ *       - in: query
+ *         name: worldId
+ *         required: false
+ *         schema:
+ *           type: string
+ *         description: ID del mundo
+ *     responses:
+ *       200:
+ *         description: Lista de zonas
+ *       404:
+ *         description: El mundo no existe
  */
 const getAllZones = async (req, res) => {
     try {
@@ -35,7 +51,20 @@ const getAllZones = async (req, res) => {
 };
 
 /**
- * Obtener zona por ID
+ * @swagger
+ * /zones/{id}:
+ *   get:
+ *     summary: Obtener zona por ID
+ *     tags: [Zones]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *     responses:
+ *       200:
+ *         description: Zona encontrada
+ *       404:
+ *         description: Zona no encontrada
  */
 const getZoneById = async (req, res) => {
     try {
@@ -54,7 +83,22 @@ const getZoneById = async (req, res) => {
 };
 
 /**
- * Crear zona
+ * @swagger
+ * /zones:
+ *   post:
+ *     summary: Crear una zona
+ *     tags: [Zones]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Zone'
+ *     responses:
+ *       201:
+ *         description: Zona creada
+ *       400:
+ *         description: Campos obligatorios faltantes
  */
 const createZone = async (req, res) => {
     try {
@@ -74,7 +118,20 @@ const createZone = async (req, res) => {
 };
 
 /**
- * Actualizar zona
+ * @swagger
+ * /zones/{id}:
+ *   put:
+ *     summary: Actualizar una zona
+ *     tags: [Zones]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *     responses:
+ *       200:
+ *         description: Zona actualizada
+ *       404:
+ *         description: Zona no encontrada
  */
 const updateZone = async (req, res) => {
     try {
@@ -101,7 +158,20 @@ const updateZone = async (req, res) => {
 };
 
 /**
- * Eliminar zona
+ * @swagger
+ * /zones/{id}:
+ *   delete:
+ *     summary: Eliminar una zona
+ *     tags: [Zones]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *     responses:
+ *       200:
+ *         description: Zona eliminada
+ *       404:
+ *         description: Zona no encontrada
  */
 const deleteZone = async (req, res) => {
     try {

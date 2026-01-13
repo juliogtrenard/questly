@@ -20,20 +20,45 @@ const {
 } = require("../middlewares/validar.middleware");
 
 /**
- * @route GET /races
- * @desc Obtener todas las razas de un mundo (query: worldId)
+ * @swagger
+ * /races:
+ *   get:
+ *     summary: Obtener razas.
+ *     description: Devuelve todas las razas. Puede filtrarse por mundo.
+ *     parameters:
+ *       - in: query
+ *         name: worldId
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Lista de razas
  */
 router.get("/", getAllRaces);
 
 /**
- * @route GET /races/:id
- * @desc Obtener raza por id
+ * @swagger
+ * /races/{id}:
+ *   get:
+ *     summary: Obtener raza por ID
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
  */
 router.get("/:id", getRaceById);
 
 /**
- * @route POST /races
- * @desc Crear nueva raza
+ * @swagger
+ * /races:
+ *   post:
+ *     summary: Crear raza
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Race'
  */
 router.post(
     "/",
@@ -50,8 +75,24 @@ router.post(
 );
 
 /**
- * @route PUT /races/:id
- * @desc Actualizar raza
+ * @swagger
+ * /races/{id}:
+ *   put:
+ *     summary: Actualizar raza
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Race'
+ *     responses:
+ *       200:
+ *         description: Raza actualizada
+ *       404:
+ *         description: Raza no encontrada
  */
 router.put(
     "/:id",
@@ -68,8 +109,19 @@ router.put(
 );
 
 /**
- * @route DELETE /races/:id
- * @desc Eliminar raza
+ * @swagger
+ * /races/{id}:
+ *   delete:
+ *     summary: Eliminar raza
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *     responses:
+ *       200:
+ *         description: Raza eliminada
+ *       404:
+ *         description: Raza no encontrada
  */
 router.delete("/:id", deleteRace);
 

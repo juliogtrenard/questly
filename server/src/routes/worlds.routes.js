@@ -19,20 +19,38 @@ const {
 const router = express.Router();
 
 /**
- * @route GET /worlds
- * @desc Obtener todos los mundos
+ * @swagger
+ * /worlds:
+ *   get:
+ *     summary: Obtener mundos
+ *     responses:
+ *       200:
+ *         description: Lista de mundos
  */
 router.get("/", getAllWorlds);
 
 /**
- * @route GET /worlds/:id
- * @desc Obtener mundo por id
+ * @swagger
+ * /worlds/{id}:
+ *   get:
+ *     summary: Obtener mundo por ID
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
  */
 router.get("/:id", getWorldById);
 
 /**
- * @route POST /worlds
- * @desc Crear nuevo mundo
+ * @swagger
+ * /worlds:
+ *   post:
+ *     summary: Crear mundo
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/World'
  */
 router.post(
     "/",
@@ -47,8 +65,24 @@ router.post(
 );
 
 /**
- * @route PUT /worlds/:id
- * @desc Actualizar mundo
+ * @swagger
+ * /worlds/{id}:
+ *   put:
+ *     summary: Actualizar mundo
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/World'
+ *     responses:
+ *       200:
+ *         description: Mundo actualizada
+ *       404:
+ *         description: Mundo no encontrada
  */
 router.put(
     "/:id",
@@ -63,8 +97,19 @@ router.put(
 );
 
 /**
- * @route DELETE /worlds/:id
- * @desc Eliminar mundo
+ * @swagger
+ * /worlds/{id}:
+ *   delete:
+ *     summary: Eliminar mundo
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *     responses:
+ *       200:
+ *         description: Mundo eliminado
+ *       404:
+ *         description: Mundo no encontrado
  */
 router.delete("/:id", deleteWorld);
 

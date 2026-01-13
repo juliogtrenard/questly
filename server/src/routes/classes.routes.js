@@ -19,20 +19,56 @@ const {
 } = require("../middlewares/validar.middleware");
 
 /**
- * @route GET /classes
- * @desc Obtener todas las clases de un mundo (query: worldId)
+ * @swagger
+ * /classes:
+ *   get:
+ *     summary: Obtener clases
+ *     description: Devuelve todas las clases. Puede filtrarse por mundo.
+ *     parameters:
+ *       - in: query
+ *         name: worldId
+ *         schema:
+ *           type: string
+ *         description: ID del mundo
+ *     responses:
+ *       200:
+ *         description: Lista de clases
+ *       404:
+ *         description: El mundo no existe
  */
 router.get("/", getAllClasses);
 
 /**
- * @route GET /classes/:id
- * @desc Obtener clase por id
+ * @swagger
+ * /classes/{id}:
+ *   get:
+ *     summary: Obtener clase por ID
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *     responses:
+ *       200:
+ *         description: Clase encontrada
+ *       404:
+ *         description: Clase no encontrada
  */
 router.get("/:id", getClassById);
 
 /**
- * @route POST /classes
- * @desc Crear nueva clase
+ * @swagger
+ * /classes:
+ *   post:
+ *     summary: Crear clase
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Class'
+ *     responses:
+ *       201:
+ *         description: Clase creada
  */
 router.post(
     "/",
@@ -49,8 +85,24 @@ router.post(
 );
 
 /**
- * @route PUT /classes/:id
- * @desc Actualizar clase
+ * @swagger
+ * /classes/{id}:
+ *   put:
+ *     summary: Actualizar clase
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Class'
+ *     responses:
+ *       200:
+ *         description: Clase actualizada
+ *       404:
+ *         description: Clase no encontrada
  */
 router.put(
     "/:id",
@@ -67,8 +119,19 @@ router.put(
 );
 
 /**
- * @route DELETE /classes/:id
- * @desc Eliminar clase
+ * @swagger
+ * /classes/{id}:
+ *   delete:
+ *     summary: Eliminar clase
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *     responses:
+ *       200:
+ *         description: Clase eliminada
+ *       404:
+ *         description: Clase no encontrada
  */
 router.delete("/:id", deleteClass);
 

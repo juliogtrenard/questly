@@ -1,5 +1,29 @@
 const { Schema, model } = require("mongoose");
 
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     World:
+ *       type: object
+ *       required:
+ *         - id
+ *         - name
+ *         - description
+ *       properties:
+ *         id:
+ *           type: string
+ *           example: eldoria
+ *         name:
+ *           type: string
+ *           example: Eldoria
+ *         description:
+ *           type: string
+ *           example: Un antiguo mundo de magia y reinos olvidados
+ *         era:
+ *           type: string
+ *           example: Era de los Tres Soles
+ */
 const worldSchema = new Schema({
     id: {
         type: String,

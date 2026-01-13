@@ -1,6 +1,8 @@
 require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
+const swaggerUi = require("swagger-ui-express");
+const swaggerSpec = require("./docs/swagger");
 const conectarDB = require("./config/db.js");
 
 const racesRoutes = require("./routes/races.routes.js");
@@ -20,6 +22,8 @@ conectarDB();
  */
 app.use(cors());
 app.use(express.json());
+
+app.use("/api/v1/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 /**
  * Rutas de la API

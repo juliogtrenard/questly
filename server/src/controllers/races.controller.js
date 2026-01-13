@@ -2,7 +2,23 @@ const Race = require("../models/race.model");
 const World = require("../models/world.model");
 
 /**
- * Obtener todas las razas. Puedes filtrar por mundo.
+ * @swagger
+ * /races:
+ *   get:
+ *     summary: Obtener razas (opcionalmente filtradas por mundo)
+ *     tags: [Races]
+ *     parameters:
+ *       - in: query
+ *         name: worldId
+ *         required: false
+ *         schema:
+ *           type: string
+ *         description: ID del mundo
+ *     responses:
+ *       200:
+ *         description: Lista de razas
+ *       404:
+ *         description: El mundo no existe
  */
 const getAllRaces = async (req, res) => {
     try {
@@ -35,7 +51,20 @@ const getAllRaces = async (req, res) => {
 };
 
 /**
- * Obtener una raza por ID
+ * @swagger
+ * /races/{id}:
+ *   get:
+ *     summary: Obtener raza por ID
+ *     tags: [Races]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *     responses:
+ *       200:
+ *         description: Raza encontrada
+ *       404:
+ *         description: Raza no encontrada
  */
 const getRaceById = async (req, res) => {
     try {
@@ -55,7 +84,22 @@ const getRaceById = async (req, res) => {
 };
 
 /**
- * Crear nueva raza
+ * @swagger
+ * /races:
+ *   post:
+ *     summary: Crear una raza
+ *     tags: [Races]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Race'
+ *     responses:
+ *       201:
+ *         description: Raza creada
+ *       400:
+ *         description: Campos obligatorios faltantes
  */
 const createRace = async (req, res) => {
     try {
@@ -75,7 +119,20 @@ const createRace = async (req, res) => {
 };
 
 /**
- * Actualizar raza
+ * @swagger
+ * /races/{id}:
+ *   put:
+ *     summary: Actualizar una raza
+ *     tags: [Races]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *     responses:
+ *       200:
+ *         description: Raza actualizada
+ *       404:
+ *         description: Raza no encontrada
  */
 const updateRace = async (req, res) => {
     try {
@@ -102,7 +159,20 @@ const updateRace = async (req, res) => {
 };
 
 /**
- * Eliminar raza
+ * @swagger
+ * /races/{id}:
+ *   delete:
+ *     summary: Eliminar una raza
+ *     tags: [Races]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *     responses:
+ *       200:
+ *         description: Raza eliminada
+ *       404:
+ *         description: Raza no encontrada
  */
 const deleteRace = async (req, res) => {
     try {

@@ -1,7 +1,33 @@
 const World = require("../models/world.model");
 
 /**
- * Obtener todos los mundos
+ * @swagger
+ * /worlds:
+ *   get:
+ *     summary: Obtener todos los mundos
+ *     tags: [Worlds]
+ *     responses:
+ *       200:
+ *         description: Lista de mundos
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 ok:
+ *                   type: boolean
+ *                 message:
+ *                   type: string
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/World'
+ *       500:
+ *         description: Error interno
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
  */
 const getAllWorlds = async (req, res) => {
     try {
@@ -17,7 +43,24 @@ const getAllWorlds = async (req, res) => {
 };
 
 /**
- * Obtener un mundo por su id
+ * @swagger
+ * /worlds/{id}:
+ *   get:
+ *     summary: Obtener un mundo por ID
+ *     tags: [Worlds]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Mundo encontrado
+ *       404:
+ *         description: Mundo no encontrado
+ *       500:
+ *         description: Error interno
  */
 const getWorldById = async (req, res) => {
     try {
@@ -36,7 +79,24 @@ const getWorldById = async (req, res) => {
 };
 
 /**
- * Crear un nuevo mundo
+ * @swagger
+ * /worlds:
+ *   post:
+ *     summary: Crear un nuevo mundo
+ *     tags: [Worlds]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/World'
+ *     responses:
+ *       201:
+ *         description: Mundo creado
+ *       400:
+ *         description: Datos obligatorios faltantes
+ *       500:
+ *         description: Error interno
  */
 const createWorld = async (req, res) => {
     try {
@@ -61,7 +121,22 @@ const createWorld = async (req, res) => {
 };
 
 /**
- * Actualizar un mundo por id
+ * @swagger
+ * /worlds/{id}:
+ *   put:
+ *     summary: Actualizar un mundo
+ *     tags: [Worlds]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *     requestBody:
+ *       required: true
+ *     responses:
+ *       200:
+ *         description: Mundo actualizado
+ *       404:
+ *         description: Mundo no encontrado
  */
 const updateWorld = async (req, res) => {
     try {
@@ -88,7 +163,20 @@ const updateWorld = async (req, res) => {
 };
 
 /**
- * Eliminar un mundo por id
+ * @swagger
+ * /worlds/{id}:
+ *   delete:
+ *     summary: Eliminar un mundo
+ *     tags: [Worlds]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *     responses:
+ *       200:
+ *         description: Mundo eliminado
+ *       404:
+ *         description: Mundo no encontrado
  */
 const deleteWorld = async (req, res) => {
     try {
