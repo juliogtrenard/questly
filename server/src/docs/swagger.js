@@ -94,10 +94,6 @@ const options = {
         },
         servers: [
             {
-                url: "https://questly-back.vercel.app/api/v1",
-                description: "Despliegue",
-            },
-            {
                 url: "http://localhost:3001/api/v1",
                 description: "Servidor local",
             },
