@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: components/admin/AdminSidebar.jsx</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: components/admin/AdminSidebar.jsx</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import { NavLink } from "react-router";
+import {
+    LayoutDashboard,
+    Sword,
+    ScrollText,
+    LogOut,
+    ShieldUser,
+    UserCog,
+} from "lucide-react";
+import { useAuth } from "../../context/AuthContext";
+
+/**
+ * Componente AdminSidebar
+ *
+ * Sidebar de navegación para el panel de administración.
+ * Muestra información del usuario administrador, enlaces de navegación
+ * y un botón para cerrar sesión.
+ *
+ * @component
+ * @returns {JSX.Element} Sidebar de administración
+ */
+export const AdminSidebar = () => {
+    /**
+     * Obtiene el usuario autenticado y la función de cierre de sesión
+     * desde el contexto de autenticación.
+     *
+     * @type {{ user: Object, logout: Function }}
+     */
+    const { user, logout } = useAuth();
+
+    /**
+     * Maneja el cierre de sesión del administrador.
+     * Llama a la función logout.
+     *
+     * @async
+     * @function handleLogout
+     * @returns {Promise&lt;void>}
+     */
+    const handleLogout = async () => {
+        await logout();
+    };
+
+    return (
+        &lt;aside className="admin-sidebar">
+            &lt;div className="admin-top">
+                &lt;div className="admin-user">
+                    &lt;div className="admin-username">
+                        &lt;ShieldUser />
+                        &lt;div className="data">
+                            &lt;span>{user?.username}&lt;/span>
+                            &lt;span className="admin-role">Administrador&lt;/span>
+                        &lt;/div>
+                    &lt;/div>
+                &lt;/div>
+
+                &lt;nav className="admin-nav">
+                    &lt;NavLink to="/admin" end>
+                        &lt;LayoutDashboard size={18} />
+                        Dashboard
+                    &lt;/NavLink>
+
+                    &lt;NavLink to="/admin/class">
+                        &lt;Sword size={18} />
+                        Clases
+                    &lt;/NavLink>
+
+                    &lt;NavLink to="/admin/event">
+                        &lt;ScrollText size={18} />
+                        Eventos
+                    &lt;/NavLink>
+
+                    &lt;NavLink to="/admin/users">
+                        &lt;UserCog size={18} />
+                        Usuarios
+                    &lt;/NavLink>
+                &lt;/nav>
+            &lt;/div>
+
+            &lt;div className="admin-bottom">
+                &lt;button className="logout-btn" onClick={handleLogout}>
+                    &lt;LogOut size={18} />
+                    Cerrar sesión
+                &lt;/button>
+            &lt;/div>
+        &lt;/aside>
+    );
+};
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#AdminClasses">AdminClasses</a></li><li><a href="global.html#AdminDashboard">AdminDashboard</a></li><li><a href="global.html#AdminEvents">AdminEvents</a></li><li><a href="global.html#AdminLayout">AdminLayout</a></li><li><a href="global.html#AdminSidebar">AdminSidebar</a></li><li><a href="global.html#AdminUsers">AdminUsers</a></li><li><a href="global.html#AppRoutes">AppRoutes</a></li><li><a href="global.html#AuthContext">AuthContext</a></li><li><a href="global.html#AuthProvider">AuthProvider</a></li><li><a href="global.html#BentoCard">BentoCard</a></li><li><a href="global.html#CTA">CTA</a></li><li><a href="global.html#CharacterCard">CharacterCard</a></li><li><a href="global.html#ClassCard">ClassCard</a></li><li><a href="global.html#CreateCharacterModal">CreateCharacterModal</a></li><li><a href="global.html#CreateClassModal">CreateClassModal</a></li><li><a href="global.html#CreateEventModal">CreateEventModal</a></li><li><a href="global.html#CreateUserModal">CreateUserModal</a></li><li><a href="global.html#DeleteModal">DeleteModal</a></li><li><a href="global.html#Demo">Demo</a></li><li><a href="global.html#EventCard">EventCard</a></li><li><a href="global.html#FeatureCard">FeatureCard</a></li><li><a href="global.html#Features">Features</a></li><li><a href="global.html#Header">Header</a></li><li><a href="global.html#Hero">Hero</a></li><li><a href="global.html#Landing">Landing</a></li><li><a href="global.html#Loader">Loader</a></li><li><a href="global.html#Login">Login</a></li><li><a href="global.html#Play">Play</a></li><li><a href="global.html#ProtectedRoute">ProtectedRoute</a></li><li><a href="global.html#Register">Register</a></li><li><a href="global.html#UserCard">UserCard</a></li><li><a href="global.html#UserCharacters">UserCharacters</a></li><li><a href="global.html#UserDashboard">UserDashboard</a></li><li><a href="global.html#UserLayout">UserLayout</a></li><li><a href="global.html#UserSidebar">UserSidebar</a></li><li><a href="global.html#adminApp">adminApp</a></li><li><a href="global.html#adminAuth">adminAuth</a></li><li><a href="global.html#app">app</a></li><li><a href="global.html#auth">auth</a></li><li><a href="global.html#db">db</a></li><li><a href="global.html#firebaseConfig">firebaseConfig</a></li><li><a href="global.html#handleLogout">handleLogout</a></li><li><a href="global.html#handleStatChange">handleStatChange</a></li><li><a href="global.html#handleSubmit">handleSubmit</a></li><li><a href="global.html#useAuth">useAuth</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.5</a> on Tue Jan 13 2026 12:01:34 GMT+0100 (hora estándar de Europa central)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

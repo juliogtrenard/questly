@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: pages/admin/AdminClasses.jsx</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: pages/admin/AdminClasses.jsx</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import { useEffect, useState } from "react";
+import { collection, getDocs, deleteDoc, doc } from "firebase/firestore";
+import { db } from "../../firebase/firebaseConfig";
+import { Plus } from "lucide-react";
+import { AnimatePresence } from "framer-motion";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { ClassCard } from "../../components/admin/ClassCard";
+import { CreateClassModal } from "../../components/admin/CreateClassModal";
+import { Loader } from "../../components/ui/Loader";
+import { DeleteModal } from "../../components/ui/DeleteModal";
+
+/**
+ * Componente para gestionar las clases en el panel de administración.
+ * Permite visualizar, agregar, editar y eliminar clases.
+ *
+ * @component
+ * @returns {JSX.Element} Vista de administración de clases
+ */
+export const AdminClasses = () => {
+    /**
+     * Estado que guarda las clases obtenidas de Firestore.
+     * @type {Array&lt;Object>}
+     */
+    const [classes, setClasses] = useState([]);
+
+    /**
+     * Estado que indica si los datos de las clases están cargando.
+     * @type {boolean}
+     */
+    const [loading, setLoading] = useState(true);
+
+    /**
+     * Estado que controla si el modal de creación/edición está visible.
+     * @type {boolean}
+     */
+
+    const [showModal, setShowModal] = useState(false);
+
+    /**
+     * Estado que guarda los datos de la clase seleccionada para edición o crea una clase nueva si es null.
+     * @type {Object|null}
+     */
+    const [selectedClass, setSelectedClass] = useState(null); // null = crear, objeto = editar
+
+    /**
+     * Estado que controla la visibilidad de la modal de eliminación.
+     * @type {boolean}
+     */
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+
+    /**
+     * Estado que almacena la clase seleccionada para ser eliminada.
+     * Inicialmente es null, lo que significa que no hay una clase seleccionada.
+     * @type {Object|null}
+     */
+    const [classToDelete, setClassToDelete] = useState(null);
+
+    /**
+     * Obtiene las clases desde Firestore.
+     * Se actualiza el estado 'classes' con los datos obtenidos.
+     */
+    const fetchClasses = async () => {
+        const snapshot = await getDocs(collection(db, "classes"));
+        const data = snapshot.docs.map((doc) => ({
+            id: doc.id,
+            ...doc.data(),
+        }));
+        setClasses(data);
+        setLoading(false);
+    };
+
+    /**
+     * Abre la modal como creación de clase.
+     * Reinicia la clase seleccionada y muestra el modal.
+     */
+
+    const handleAddClass = () => {
+        setSelectedClass(null);
+        setShowModal(true);
+    };
+
+    /**
+     * Función para abrir el modal en modo de edición de clase.
+     * Recibe una clase y establece los datos de la clase en el estado 'selectedClass'.
+     * @param {Object} c - Clase seleccionada para editar
+     */
+    const handleEdit = (c) => {
+        setSelectedClass(c);
+        setShowModal(true);
+    };
+
+    /**
+     * Función que se ejecuta cuando el usuario intenta eliminar una clase.
+     * Esta función guarda la clase seleccionada en el estado
+     * y muestra la modal de confirmación de eliminación.
+     *
+     * @param {Object} c - La clase seleccionada para eliminar.
+     */
+    const handleDelete = (c) => {
+        setClassToDelete(c);
+        setShowDeleteModal(true);
+    };
+
+    /**
+     * Función que se ejecuta cuando el usuario confirma la eliminación de una clase.
+     * Elimina la clase de la base de datos y luego actualiza la lista de clases.
+     *
+     * @param {Object} classData - Los datos de la clase que será eliminada de la base de datos.
+     * @returns {Promise&lt;void>} - Una promesa.
+     */
+    const confirmDelete = async (classData) => {
+        await deleteDoc(doc(db, "classes", classData.id));
+        toast.success("Clase eliminada correctamente", { theme: "dark" });
+        fetchClasses();
+    };
+
+    /**
+     * Efecto que se ejecuta una sola vez al cargar el componente.
+     * Llama a 'fetchClasses' para cargar las clases desde Firestore.
+     */
+    useEffect(() => {
+        fetchClasses();
+    }, []);
+
+    return (
+        &lt;>
+            &lt;div className="admin-page-header">
+                &lt;div>
+                    &lt;h1>Gestión de clases&lt;/h1>
+                    &lt;p>Crea y administra las clases disponibles&lt;/p>
+                &lt;/div>
+
+                &lt;button
+                    className="primary-btn"
+                    onClick={handleAddClass} // Abrir en modo crear
+                >
+                    &lt;Plus size={18} />
+                    Agregar clase
+                &lt;/button>
+            &lt;/div>
+
+            {loading ? (
+                &lt;Loader />
+            ) : (
+                &lt;div className="bento-grid">
+                    {classes.map((c) => (
+                        &lt;ClassCard
+                            key={c.id}
+                            data={c}
+                            onEdit={handleEdit}
+                            onDelete={handleDelete}
+                        />
+                    ))}
+                &lt;/div>
+            )}
+            &lt;AnimatePresence>
+                {showModal &amp;&amp; (
+                    &lt;CreateClassModal
+                        classData={selectedClass}
+                        onClose={() => {
+                            setShowModal(false);
+                            setSelectedClass(null);
+                            fetchClasses();
+                        }}
+                    />
+                )}
+
+                {showDeleteModal &amp;&amp; classToDelete &amp;&amp; (
+                    &lt;DeleteModal
+                        item={classToDelete}
+                        onClose={() => setShowDeleteModal(false)}
+                        onConfirm={confirmDelete}
+                    />
+                )}
+            &lt;/AnimatePresence>
+
+            &lt;ToastContainer position="top-right" autoClose={3000} />
+        &lt;/>
+    );
+};
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#AdminClasses">AdminClasses</a></li><li><a href="global.html#AdminDashboard">AdminDashboard</a></li><li><a href="global.html#AdminEvents">AdminEvents</a></li><li><a href="global.html#AdminLayout">AdminLayout</a></li><li><a href="global.html#AdminSidebar">AdminSidebar</a></li><li><a href="global.html#AdminUsers">AdminUsers</a></li><li><a href="global.html#AppRoutes">AppRoutes</a></li><li><a href="global.html#AuthContext">AuthContext</a></li><li><a href="global.html#AuthProvider">AuthProvider</a></li><li><a href="global.html#BentoCard">BentoCard</a></li><li><a href="global.html#CTA">CTA</a></li><li><a href="global.html#CharacterCard">CharacterCard</a></li><li><a href="global.html#ClassCard">ClassCard</a></li><li><a href="global.html#CreateCharacterModal">CreateCharacterModal</a></li><li><a href="global.html#CreateClassModal">CreateClassModal</a></li><li><a href="global.html#CreateEventModal">CreateEventModal</a></li><li><a href="global.html#CreateUserModal">CreateUserModal</a></li><li><a href="global.html#DeleteModal">DeleteModal</a></li><li><a href="global.html#Demo">Demo</a></li><li><a href="global.html#EventCard">EventCard</a></li><li><a href="global.html#FeatureCard">FeatureCard</a></li><li><a href="global.html#Features">Features</a></li><li><a href="global.html#Header">Header</a></li><li><a href="global.html#Hero">Hero</a></li><li><a href="global.html#Landing">Landing</a></li><li><a href="global.html#Loader">Loader</a></li><li><a href="global.html#Login">Login</a></li><li><a href="global.html#Play">Play</a></li><li><a href="global.html#ProtectedRoute">ProtectedRoute</a></li><li><a href="global.html#Register">Register</a></li><li><a href="global.html#UserCard">UserCard</a></li><li><a href="global.html#UserCharacters">UserCharacters</a></li><li><a href="global.html#UserDashboard">UserDashboard</a></li><li><a href="global.html#UserLayout">UserLayout</a></li><li><a href="global.html#UserSidebar">UserSidebar</a></li><li><a href="global.html#adminApp">adminApp</a></li><li><a href="global.html#adminAuth">adminAuth</a></li><li><a href="global.html#app">app</a></li><li><a href="global.html#auth">auth</a></li><li><a href="global.html#db">db</a></li><li><a href="global.html#firebaseConfig">firebaseConfig</a></li><li><a href="global.html#handleLogout">handleLogout</a></li><li><a href="global.html#handleStatChange">handleStatChange</a></li><li><a href="global.html#handleSubmit">handleSubmit</a></li><li><a href="global.html#useAuth">useAuth</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.5</a> on Tue Jan 13 2026 12:01:34 GMT+0100 (hora estándar de Europa central)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

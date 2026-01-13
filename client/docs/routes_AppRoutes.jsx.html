@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: routes/AppRoutes.jsx</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: routes/AppRoutes.jsx</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import { BrowserRouter, Routes, Route, Navigate } from "react-router";
+import { useAuth } from "../context/AuthContext";
+import { Landing } from "../pages/public/Landing";
+import { Login } from "../pages/public/Login";
+import { Register } from "../pages/public/Register";
+import { AdminDashboard } from "../pages/admin/AdminDashboard";
+import { AdminClasses } from "../pages/admin/AdminClasses";
+import { AdminEvents } from "../pages/admin/AdminEvents";
+import { AdminUsers } from "../pages/admin/AdminUsers";
+import { AdminLayout } from "../pages/admin/layout/AdminLayout";
+import { ProtectedRoute } from "../components/routes/ProtectedRoute";
+import { UserLayout } from "../pages/user/layout/UserLayout";
+import { UserDashboard } from "../pages/user/UserDashboard";
+import { UserCharacters } from "../pages/user/UserCharacters";
+import { Play } from "../pages/user/Play";
+
+/**
+ * Componente AppRoutes.
+ *
+ * Define todas las rutas de la aplicación usando React Router.
+ * Maneja:
+ * - Rutas públicas
+ * - Rutas protegidas por autenticación
+ * - Redirecciones según el rol del usuario
+ *
+ * @component
+ * @returns {JSX.Element} Configuración de rutas de la aplicación
+ */
+export const AppRoutes = () => {
+    /**
+     * Usuario autenticado obtenido desde el AuthContext.
+     *
+     * @type {{ role: string } | null}
+     */
+    const { user } = useAuth();
+
+    return (
+        &lt;BrowserRouter>
+            &lt;Routes>
+                {/* =====================
+                    PÁGINAS PÚBLICAS
+                   ===================== */}
+
+                {/* Landing */}
+                &lt;Route
+                    path="/"
+                    element={
+                        !user ? (
+                            &lt;Landing />
+                        ) : (
+                            &lt;Navigate
+                                to={
+                                    user.role === "admin"
+                                        ? "/admin"
+                                        : "/dashboard"
+                                }
+                                replace
+                            />
+                        )
+                    }
+                />
+
+                {/* Login */}
+                &lt;Route
+                    path="/login"
+                    element={
+                        !user ? (
+                            &lt;Login />
+                        ) : (
+                            &lt;Navigate
+                                to={
+                                    user.role === "admin"
+                                        ? "/admin"
+                                        : "/dashboard"
+                                }
+                                replace
+                            />
+                        )
+                    }
+                />
+
+                {/* Register */}
+                &lt;Route
+                    path="/register"
+                    element={
+                        !user ? (
+                            &lt;Register />
+                        ) : (
+                            &lt;Navigate
+                                to={
+                                    user.role === "admin"
+                                        ? "/admin"
+                                        : "/dashboard"
+                                }
+                                replace
+                            />
+                        )
+                    }
+                />
+
+                {/* =====================
+                    RUTAS PROTEGIDAS
+                   ===================== */}
+
+                {/* Dashboard de usuario */}
+                &lt;Route
+                    path="/dashboard"
+                    element={
+                        &lt;ProtectedRoute role="user">
+                            &lt;UserLayout />
+                        &lt;/ProtectedRoute>
+                    }
+                >
+                    {/* /dashboard */}
+                    &lt;Route index element={&lt;UserDashboard />} />
+
+                    {/* /dashboard/characters */}
+                    &lt;Route path="characters" element={&lt;UserCharacters />} />
+
+                    {/* /dashboard/play */}
+                    &lt;Route path="play" element={&lt;Play />} />
+                &lt;/Route>
+
+                {/* Dashboard de administrador */}
+                &lt;Route
+                    path="/admin"
+                    element={
+                        &lt;ProtectedRoute role="admin">
+                            &lt;AdminLayout />
+                        &lt;/ProtectedRoute>
+                    }
+                >
+                    {/* /admin */}
+                    &lt;Route index element={&lt;AdminDashboard />} />
+
+                    {/* /admin/class */}
+                    &lt;Route path="class" element={&lt;AdminClasses />} />
+
+                    {/* /admin/event */}
+                    &lt;Route path="event" element={&lt;AdminEvents />} />
+
+                    {/* /admin/users */}
+                    &lt;Route path="users" element={&lt;AdminUsers />} />
+                &lt;/Route>
+
+                {/* =====================
+                    FALLBACK
+                   ===================== */}
+
+                {/* Cualquier ruta no existente */}
+                &lt;Route path="*" element={&lt;Navigate to="/" replace />} />
+            &lt;/Routes>
+        &lt;/BrowserRouter>
+    );
+};
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#AdminClasses">AdminClasses</a></li><li><a href="global.html#AdminDashboard">AdminDashboard</a></li><li><a href="global.html#AdminEvents">AdminEvents</a></li><li><a href="global.html#AdminLayout">AdminLayout</a></li><li><a href="global.html#AdminSidebar">AdminSidebar</a></li><li><a href="global.html#AdminUsers">AdminUsers</a></li><li><a href="global.html#AppRoutes">AppRoutes</a></li><li><a href="global.html#AuthContext">AuthContext</a></li><li><a href="global.html#AuthProvider">AuthProvider</a></li><li><a href="global.html#BentoCard">BentoCard</a></li><li><a href="global.html#CTA">CTA</a></li><li><a href="global.html#CharacterCard">CharacterCard</a></li><li><a href="global.html#ClassCard">ClassCard</a></li><li><a href="global.html#CreateCharacterModal">CreateCharacterModal</a></li><li><a href="global.html#CreateClassModal">CreateClassModal</a></li><li><a href="global.html#CreateEventModal">CreateEventModal</a></li><li><a href="global.html#CreateUserModal">CreateUserModal</a></li><li><a href="global.html#DeleteModal">DeleteModal</a></li><li><a href="global.html#Demo">Demo</a></li><li><a href="global.html#EventCard">EventCard</a></li><li><a href="global.html#FeatureCard">FeatureCard</a></li><li><a href="global.html#Features">Features</a></li><li><a href="global.html#Header">Header</a></li><li><a href="global.html#Hero">Hero</a></li><li><a href="global.html#Landing">Landing</a></li><li><a href="global.html#Loader">Loader</a></li><li><a href="global.html#Login">Login</a></li><li><a href="global.html#Play">Play</a></li><li><a href="global.html#ProtectedRoute">ProtectedRoute</a></li><li><a href="global.html#Register">Register</a></li><li><a href="global.html#UserCard">UserCard</a></li><li><a href="global.html#UserCharacters">UserCharacters</a></li><li><a href="global.html#UserDashboard">UserDashboard</a></li><li><a href="global.html#UserLayout">UserLayout</a></li><li><a href="global.html#UserSidebar">UserSidebar</a></li><li><a href="global.html#adminApp">adminApp</a></li><li><a href="global.html#adminAuth">adminAuth</a></li><li><a href="global.html#app">app</a></li><li><a href="global.html#auth">auth</a></li><li><a href="global.html#db">db</a></li><li><a href="global.html#firebaseConfig">firebaseConfig</a></li><li><a href="global.html#handleLogout">handleLogout</a></li><li><a href="global.html#handleStatChange">handleStatChange</a></li><li><a href="global.html#handleSubmit">handleSubmit</a></li><li><a href="global.html#useAuth">useAuth</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.5</a> on Tue Jan 13 2026 12:01:34 GMT+0100 (hora estándar de Europa central)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

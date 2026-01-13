@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: components/ui/Hero.jsx</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: components/ui/Hero.jsx</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import { motion } from "framer-motion";
+import { Sword, Trophy } from "lucide-react";
+import { Link } from "react-router";
+import "./Hero.css";
+
+/**
+ * Componente Hero.
+ *
+ * Sección principal de la página.
+ * Incluye:
+ * - Texto de bienvenida y título animado
+ * - Descripción de la aplicación
+ * - Botones de acción (comenzar aventura / leaderboard)
+ * - Decoraciones flotantes animadas
+ *
+ * @component
+ * @returns {JSX.Element} Hero section de la página
+ */
+export const Hero = () => {
+    return (
+        &lt;section className="section">
+            &lt;div className="background-gradient">&lt;/div>
+            &lt;div className="container">
+                &lt;motion.div
+                    initial={{ opacity: 0, y: 30 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.8 }}
+                    className="motion-content"
+                >
+                    &lt;motion.div
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                        transition={{ delay: 0.2, type: "spring" }}
+                        className="cta"
+                    >
+                        &lt;span className="cta-text">Tu aventura te espera&lt;/span>
+                    &lt;/motion.div>
+
+                    &lt;h1 className="title">
+                        Enfrenta tu destino en
+                        &lt;br />
+                        &lt;span className="highlighted-text">Questly&lt;/span>
+                    &lt;/h1>
+
+                    &lt;p className="description">
+                        Embárcate en aventuras narrativas interactivas donde
+                        cada decisión moldea tu historia. Crea personajes
+                        únicos, enfrenta desafíos épicos y compite por la
+                        gloria.
+                    &lt;/p>
+
+                    &lt;div className="button-container">
+                        &lt;Link to="/login" className="btn primary">
+                            &lt;Sword className="btn-icon primary" />
+                            Comenzar aventura
+                        &lt;/Link>
+                        &lt;Link to="/leaderboard" className="btn outline">
+                            &lt;Trophy className="btn-icon" />
+                            Ver puntuaciones
+                        &lt;/Link>
+                    &lt;/div>
+                &lt;/motion.div>
+            &lt;/div>
+
+            {/* Floating decorations */}
+            &lt;motion.div
+                animate={{ y: [0, -50, 0] }}
+                transition={{
+                    duration: 4,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                }}
+                className="floating-icon left"
+            >
+                ⚔️
+            &lt;/motion.div>
+            &lt;motion.div
+                animate={{ y: [0, 50, 0] }}
+                transition={{
+                    duration: 5,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                }}
+                className="floating-icon right"
+            >
+                🛡️
+            &lt;/motion.div>
+        &lt;/section>
+    );
+};
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#AdminClasses">AdminClasses</a></li><li><a href="global.html#AdminDashboard">AdminDashboard</a></li><li><a href="global.html#AdminEvents">AdminEvents</a></li><li><a href="global.html#AdminLayout">AdminLayout</a></li><li><a href="global.html#AdminSidebar">AdminSidebar</a></li><li><a href="global.html#AdminUsers">AdminUsers</a></li><li><a href="global.html#AppRoutes">AppRoutes</a></li><li><a href="global.html#AuthContext">AuthContext</a></li><li><a href="global.html#AuthProvider">AuthProvider</a></li><li><a href="global.html#BentoCard">BentoCard</a></li><li><a href="global.html#CTA">CTA</a></li><li><a href="global.html#CharacterCard">CharacterCard</a></li><li><a href="global.html#ClassCard">ClassCard</a></li><li><a href="global.html#CreateCharacterModal">CreateCharacterModal</a></li><li><a href="global.html#CreateClassModal">CreateClassModal</a></li><li><a href="global.html#CreateEventModal">CreateEventModal</a></li><li><a href="global.html#CreateUserModal">CreateUserModal</a></li><li><a href="global.html#DeleteModal">DeleteModal</a></li><li><a href="global.html#Demo">Demo</a></li><li><a href="global.html#EventCard">EventCard</a></li><li><a href="global.html#FeatureCard">FeatureCard</a></li><li><a href="global.html#Features">Features</a></li><li><a href="global.html#Header">Header</a></li><li><a href="global.html#Hero">Hero</a></li><li><a href="global.html#Landing">Landing</a></li><li><a href="global.html#Loader">Loader</a></li><li><a href="global.html#Login">Login</a></li><li><a href="global.html#Play">Play</a></li><li><a href="global.html#ProtectedRoute">ProtectedRoute</a></li><li><a href="global.html#Register">Register</a></li><li><a href="global.html#UserCard">UserCard</a></li><li><a href="global.html#UserCharacters">UserCharacters</a></li><li><a href="global.html#UserDashboard">UserDashboard</a></li><li><a href="global.html#UserLayout">UserLayout</a></li><li><a href="global.html#UserSidebar">UserSidebar</a></li><li><a href="global.html#adminApp">adminApp</a></li><li><a href="global.html#adminAuth">adminAuth</a></li><li><a href="global.html#app">app</a></li><li><a href="global.html#auth">auth</a></li><li><a href="global.html#db">db</a></li><li><a href="global.html#firebaseConfig">firebaseConfig</a></li><li><a href="global.html#handleLogout">handleLogout</a></li><li><a href="global.html#handleStatChange">handleStatChange</a></li><li><a href="global.html#handleSubmit">handleSubmit</a></li><li><a href="global.html#useAuth">useAuth</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.5</a> on Tue Jan 13 2026 12:01:34 GMT+0100 (hora estándar de Europa central)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: pages/public/Register.jsx</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: pages/public/Register.jsx</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import { useState } from "react";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { Lock, AtSign, UserRound } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { doc, setDoc } from "firebase/firestore";
+import { auth, db } from "../../firebase/firebaseConfig";
+import { useNavigate } from "react-router";
+import { Header } from "../../components/ui/Header";
+import { Footer } from "../../components/ui/Footer";
+import "./Auth.css";
+
+/**
+ * Componente Register
+ *
+ * Renderiza el formulario de registro de usuarios y gestiona la creación
+ * de cuentas utilizando Firebase Authentication y Firestore.
+ * Al registrarse correctamente, redirige al usuario al dashboard.
+ *
+ * @component
+ * @returns {JSX.Element} Vista de registro con header, formulario y footer
+ */
+export const Register = () => {
+    /**
+     * Estado para el nombre de usuario
+     * @type {[string, Function]}
+     */
+    const [username, setUsername] = useState("");
+
+    /**
+     * Estado para el email del usuario
+     * @type {[string, Function]}
+     */
+    const [email, setEmail] = useState("");
+
+    /**
+     * Estado para la contraseña
+     * @type {[string, Function]}
+     */
+    const [password, setPassword] = useState("");
+
+    /**
+     * Estado para repetir la contraseña
+     * @type {[string, Function]}
+     */
+    const [repeatPassword, setRepeatPassword] = useState("");
+
+    /**
+     * Estado para mensajes de error
+     * @type {[string, Function]}
+     */
+    const [error, setError] = useState("");
+
+    /**
+     * Hook de navegación de React Router
+     */
+    const navigate = useNavigate();
+
+    /**
+     * Maneja el envío del formulario de registro.
+     * Realiza validaciones de los campos y crea el usuario
+     * en Firebase Authentication y Firestore.
+     *
+     * @async
+     * @param {React.FormEvent&lt;HTMLFormElement>} e Evento del formulario
+     * @returns {Promise&lt;void>}
+     */
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setError("");
+
+        /**
+         * Resetea únicamente los campos de contraseña
+         */
+        const resetPasswords = () => {
+            setPassword("");
+            setRepeatPassword("");
+        };
+
+        if (!username || !email || !password || !repeatPassword) {
+            setError("Todos los campos son obligatorios");
+            resetPasswords();
+            return;
+        }
+
+        if (username.length &lt; 2) {
+            setError("El username debe tener al menos 2 caracteres");
+            resetPasswords();
+            return;
+        }
+
+        /**
+         * Expresión regular para validar emails
+         * @type {RegExp}
+         */
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+        if (!emailRegex.test(email)) {
+            setError("Introduce un email válido");
+            resetPasswords();
+            return;
+        }
+
+        if (password.length &lt; 6) {
+            setError("La contraseña debe tener al menos 6 caracteres");
+            resetPasswords();
+            return;
+        }
+
+        /**
+         * Expresión regular para validar contraseña
+         * - Al menos una mayúscula
+         * - Al menos un número
+         */
+        const passwordRegex = /^(?=.*[A-Z])(?=.*\d).+$/;
+
+        if (!passwordRegex.test(password)) {
+            setError(
+                "La contraseña debe tener al menos una mayúscula y un número"
+            );
+            resetPasswords();
+            return;
+        }
+
+        if (password !== repeatPassword) {
+            setError("Las contraseñas no coinciden");
+            resetPasswords();
+            return;
+        }
+
+        try {
+            const userCredential = await createUserWithEmailAndPassword(
+                auth,
+                email,
+                password
+            );
+
+            const user = userCredential.user;
+
+            /**
+             * Guarda la información adicional del usuario en Firestore
+             */
+            await setDoc(doc(db, "users", user.uid), {
+                username,
+                role: import.meta.env.VITE_USER,
+            });
+
+            navigate("/dashboard");
+        } catch (err) {
+            switch (err.code) {
+                case "auth/email-already-in-use":
+                    setError("Ese email ya está registrado");
+                    resetPasswords();
+                    break;
+                case "auth/invalid-email":
+                    setError("Email inválido");
+                    resetPasswords();
+                    break;
+                default:
+                    setError("Error al registrarse");
+                    resetPasswords();
+            }
+        }
+    };
+
+    return (
+        &lt;>
+            &lt;div className="page">
+                &lt;Header />
+                &lt;div className="auth-container">
+                    &lt;motion.form
+                        className="form"
+                        onSubmit={handleSubmit}
+                        initial={{ opacity: 0, y: 30 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.4, ease: "easeOut" }}
+                    >
+                        &lt;div className="form__text">
+                            &lt;h1>¡Bienvenido a Questly!&lt;/h1>
+                            &lt;p>Ingresa tus datos&lt;/p>
+                        &lt;/div>
+
+                        &lt;AnimatePresence>
+                            {error &amp;&amp; (
+                                &lt;motion.p
+                                    className="error"
+                                    initial={{ opacity: 0, y: -10 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    exit={{ opacity: 0, y: -10 }}
+                                    transition={{ duration: 0.2 }}
+                                >
+                                    {error}
+                                &lt;/motion.p>
+                            )}
+                        &lt;/AnimatePresence>
+
+                        &lt;div className="input__wrapper">
+                            &lt;input
+                                type="text"
+                                id="username"
+                                name="username"
+                                className="input__field"
+                                placeholder="Tu usuario"
+                                value={username}
+                                onChange={(e) => setUsername(e.target.value)}
+                            />
+                            &lt;label htmlFor="username" className="input__label">
+                                Nombre de usuario
+                            &lt;/label>
+                            &lt;UserRound className="input__icon" />
+                        &lt;/div>
+
+                        &lt;div className="input__wrapper">
+                            &lt;input
+                                type="text"
+                                id="email"
+                                name="email"
+                                className="input__field"
+                                placeholder="Tu Email"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                            />
+                            &lt;label htmlFor="email" className="input__label">
+                                Email
+                            &lt;/label>
+                            &lt;AtSign className="input__icon" />
+                        &lt;/div>
+
+                        &lt;div className="input__wrapper">
+                            &lt;input
+                                type="password"
+                                id="password"
+                                className="input__field"
+                                placeholder="Tu contraseña"
+                                title="Mínimo 6 caracteres, una mayúscula y un número"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                            />
+                            &lt;label htmlFor="password" className="input__label">
+                                Contraseña
+                            &lt;/label>
+                            &lt;Lock className="input__icon" />
+                        &lt;/div>
+
+                        &lt;div className="input__wrapper">
+                            &lt;input
+                                type="password"
+                                id="repeatPassword"
+                                className="input__field"
+                                placeholder="Repetir contraseña"
+                                value={repeatPassword}
+                                onChange={(e) =>
+                                    setRepeatPassword(e.target.value)
+                                }
+                            />
+                            &lt;label
+                                htmlFor="repeatPassword"
+                                className="input__label"
+                            >
+                                Repetir contraseña
+                            &lt;/label>
+                            &lt;Lock className="input__icon" />
+                        &lt;/div>
+
+                        &lt;button type="submit" className="form__button">
+                            Entrar
+                        &lt;/button>
+                    &lt;/motion.form>
+                &lt;/div>
+                &lt;Footer />
+            &lt;/div>
+        &lt;/>
+    );
+};
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#AdminClasses">AdminClasses</a></li><li><a href="global.html#AdminDashboard">AdminDashboard</a></li><li><a href="global.html#AdminEvents">AdminEvents</a></li><li><a href="global.html#AdminLayout">AdminLayout</a></li><li><a href="global.html#AdminSidebar">AdminSidebar</a></li><li><a href="global.html#AdminUsers">AdminUsers</a></li><li><a href="global.html#AppRoutes">AppRoutes</a></li><li><a href="global.html#AuthContext">AuthContext</a></li><li><a href="global.html#AuthProvider">AuthProvider</a></li><li><a href="global.html#BentoCard">BentoCard</a></li><li><a href="global.html#CTA">CTA</a></li><li><a href="global.html#CharacterCard">CharacterCard</a></li><li><a href="global.html#ClassCard">ClassCard</a></li><li><a href="global.html#CreateCharacterModal">CreateCharacterModal</a></li><li><a href="global.html#CreateClassModal">CreateClassModal</a></li><li><a href="global.html#CreateEventModal">CreateEventModal</a></li><li><a href="global.html#CreateUserModal">CreateUserModal</a></li><li><a href="global.html#DeleteModal">DeleteModal</a></li><li><a href="global.html#Demo">Demo</a></li><li><a href="global.html#EventCard">EventCard</a></li><li><a href="global.html#FeatureCard">FeatureCard</a></li><li><a href="global.html#Features">Features</a></li><li><a href="global.html#Header">Header</a></li><li><a href="global.html#Hero">Hero</a></li><li><a href="global.html#Landing">Landing</a></li><li><a href="global.html#Loader">Loader</a></li><li><a href="global.html#Login">Login</a></li><li><a href="global.html#Play">Play</a></li><li><a href="global.html#ProtectedRoute">ProtectedRoute</a></li><li><a href="global.html#Register">Register</a></li><li><a href="global.html#UserCard">UserCard</a></li><li><a href="global.html#UserCharacters">UserCharacters</a></li><li><a href="global.html#UserDashboard">UserDashboard</a></li><li><a href="global.html#UserLayout">UserLayout</a></li><li><a href="global.html#UserSidebar">UserSidebar</a></li><li><a href="global.html#adminApp">adminApp</a></li><li><a href="global.html#adminAuth">adminAuth</a></li><li><a href="global.html#app">app</a></li><li><a href="global.html#auth">auth</a></li><li><a href="global.html#db">db</a></li><li><a href="global.html#firebaseConfig">firebaseConfig</a></li><li><a href="global.html#handleLogout">handleLogout</a></li><li><a href="global.html#handleStatChange">handleStatChange</a></li><li><a href="global.html#handleSubmit">handleSubmit</a></li><li><a href="global.html#useAuth">useAuth</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.5</a> on Tue Jan 13 2026 12:01:34 GMT+0100 (hora estándar de Europa central)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

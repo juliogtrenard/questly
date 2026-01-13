@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: components/user/CharacterCard.jsx</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: components/user/CharacterCard.jsx</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import { useNavigate } from "react-router";
+import {
+    Pencil,
+    Trash2,
+    Heart,
+    Swords,
+    ShieldHalf,
+    Brain,
+    Footprints,
+    Eye,
+    Play,
+} from "lucide-react";
+import "../ui/DataCard.css";
+
+/**
+ * Tarjeta de un personaje con su nombre, clase y estadísticas.
+ * Incluye botones para editar y eliminar el personaje.
+ *
+ * @param {Object} props - Propiedades del componente.
+ * @param {Object} props.data - Los datos del personaje, que incluyen el nombre, la clase y las estadísticas.
+ * @param {string} props.data.name - El nombre del personaje.
+ * @param {string} props.data.className - La clase del personaje.
+ * @param {Object} [props.data.stats] - Las estadísticas del personaje.
+ * @param {number} [props.data.stats.vitality=0] - La vitalidad del personaje.
+ * @param {number} [props.data.stats.attack=0] - El ataque del personaje.
+ * @param {number} [props.data.stats.defense=0] - La defensa del personaje.
+ * @param {number} [props.data.stats.intelligence=0] - La inteligencia del personaje.
+ * @param {number} [props.data.stats.dexterity=0] - La destreza del personaje.
+ * @param {number} [props.data.stats.perception=0] - La percepción del personaje.
+ * @param {Function} props.onEdit - Función que se ejecuta cuando se presiona el botón de editar.
+ * @param {Function} props.onDelete - Función que se ejecuta cuando se presiona el botón de eliminar.
+ *
+ * @returns {JSX.Element} Un componente de tarjeta de personaje con botones de eliminar/editar.
+ */
+export const CharacterCard = ({ data, onEdit, onDelete }) => {
+    const navigate = useNavigate();
+    const { name, className, stats = {} } = data;
+
+    const {
+        vitality = 0,
+        attack = 0,
+        defense = 0,
+        intelligence = 0,
+        dexterity = 0,
+        perception = 0,
+    } = stats;
+
+    const handlePlay = () => {
+        navigate("/dashboard/play", {
+            state: {
+                character: {
+                    id: data.id,
+                    name,
+                    stats,
+                },
+            },
+        });
+    };
+
+    return (
+        &lt;div className="bento-card">
+            &lt;div className="card-actions">
+                &lt;button onClick={() => onEdit(data)}>
+                    &lt;Pencil size={16} />
+                &lt;/button>
+                &lt;button onClick={() => onDelete(data)}>
+                    &lt;Trash2 size={16} />
+                &lt;/button>
+                &lt;button onClick={handlePlay}>
+                    &lt;Play size={16} />
+                &lt;/button>
+            &lt;/div>
+
+            &lt;h3>{name}&lt;/h3>
+            &lt;p className="bento-description">
+                Clase: &lt;strong>{className}&lt;/strong>
+            &lt;/p>
+
+            &lt;div className="bento-stats">
+                &lt;span>
+                    &lt;Heart /> {vitality}
+                &lt;/span>
+                &lt;span>
+                    &lt;Swords /> {attack}
+                &lt;/span>
+                &lt;span>
+                    &lt;ShieldHalf /> {defense}
+                &lt;/span>
+                &lt;span>
+                    &lt;Brain /> {intelligence}
+                &lt;/span>
+                &lt;span>
+                    &lt;Footprints /> {dexterity}
+                &lt;/span>
+                &lt;span>
+                    &lt;Eye /> {perception}
+                &lt;/span>
+            &lt;/div>
+        &lt;/div>
+    );
+};
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#AdminClasses">AdminClasses</a></li><li><a href="global.html#AdminDashboard">AdminDashboard</a></li><li><a href="global.html#AdminEvents">AdminEvents</a></li><li><a href="global.html#AdminLayout">AdminLayout</a></li><li><a href="global.html#AdminSidebar">AdminSidebar</a></li><li><a href="global.html#AdminUsers">AdminUsers</a></li><li><a href="global.html#AppRoutes">AppRoutes</a></li><li><a href="global.html#AuthContext">AuthContext</a></li><li><a href="global.html#AuthProvider">AuthProvider</a></li><li><a href="global.html#BentoCard">BentoCard</a></li><li><a href="global.html#CTA">CTA</a></li><li><a href="global.html#CharacterCard">CharacterCard</a></li><li><a href="global.html#ClassCard">ClassCard</a></li><li><a href="global.html#CreateCharacterModal">CreateCharacterModal</a></li><li><a href="global.html#CreateClassModal">CreateClassModal</a></li><li><a href="global.html#CreateEventModal">CreateEventModal</a></li><li><a href="global.html#CreateUserModal">CreateUserModal</a></li><li><a href="global.html#DeleteModal">DeleteModal</a></li><li><a href="global.html#Demo">Demo</a></li><li><a href="global.html#EventCard">EventCard</a></li><li><a href="global.html#FeatureCard">FeatureCard</a></li><li><a href="global.html#Features">Features</a></li><li><a href="global.html#Header">Header</a></li><li><a href="global.html#Hero">Hero</a></li><li><a href="global.html#Landing">Landing</a></li><li><a href="global.html#Loader">Loader</a></li><li><a href="global.html#Login">Login</a></li><li><a href="global.html#Play">Play</a></li><li><a href="global.html#ProtectedRoute">ProtectedRoute</a></li><li><a href="global.html#Register">Register</a></li><li><a href="global.html#UserCard">UserCard</a></li><li><a href="global.html#UserCharacters">UserCharacters</a></li><li><a href="global.html#UserDashboard">UserDashboard</a></li><li><a href="global.html#UserLayout">UserLayout</a></li><li><a href="global.html#UserSidebar">UserSidebar</a></li><li><a href="global.html#adminApp">adminApp</a></li><li><a href="global.html#adminAuth">adminAuth</a></li><li><a href="global.html#app">app</a></li><li><a href="global.html#auth">auth</a></li><li><a href="global.html#db">db</a></li><li><a href="global.html#firebaseConfig">firebaseConfig</a></li><li><a href="global.html#handleLogout">handleLogout</a></li><li><a href="global.html#handleStatChange">handleStatChange</a></li><li><a href="global.html#handleSubmit">handleSubmit</a></li><li><a href="global.html#useAuth">useAuth</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.5</a> on Tue Jan 13 2026 12:01:34 GMT+0100 (hora estándar de Europa central)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
