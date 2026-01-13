@@ -13,42 +13,6 @@ cd questly
 
 ---
 
-## Estructura del proyecto
-
-questly/
-│
-├── server/
-│ ├── src/
-│ │ ├── config/
-│ │ ├── controllers/
-│ │ ├── docs/
-│ │ ├── models/
-│ │ ├── routes/
-│ │ ├── middlewares/
-│ │ ├── utils/
-│ │ └── app.js
-│ ├── package.json
-│ └── .env
-│
-├── client/
-│ ├── docs/
-│ ├── src/
-│ │ ├── assets/
-│ │ ├── components/
-│ │ ├── context/
-│ │ ├── firebase/
-│ │ ├── pages/
-│ │ ├── routes/
-│ │ └── main.jsx
-│ ├── public/
-│ ├── package.json
-│ ├── vite.config.js
-│ └── .env
-│
-└── README.md
-
----
-
 ## Requisitos previos
 
 Antes de comenzar, asegúrate de tener:
