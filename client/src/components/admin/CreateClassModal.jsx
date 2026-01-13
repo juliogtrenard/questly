@@ -100,6 +100,19 @@ export const CreateClassModal = ({ onClose, classData }) => {
             return;
         }
 
+        const classNameRegex = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s-]+$/;
+        const descriptionRegex = /^[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ\s.,;:()'"¡!¿?-]+$/;
+
+        if (!classNameRegex.test(name)) {
+            setError("El nombre contiene caracteres inválidos");
+            return;
+        }
+
+        if (!descriptionRegex.test(description)) {
+            setError("La descripción contiene caracteres inválidos");
+            return;
+        }
+
         try {
             if (isEdit) {
                 // Actualizar clase existente

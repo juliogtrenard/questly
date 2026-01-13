@@ -70,6 +70,33 @@ export const CreateUserModal = ({ onClose, userData }) => {
             return;
         }
 
+        const usernameRegex = /^[a-zA-Z][a-zA-Z0-9_]{2,19}$/;
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+        if (!usernameRegex.test(username)) {
+            setError(
+                "El usuario debe empezar por letra y solo usar letras, números o _"
+            );
+            return;
+        }
+
+        if (!isEdit) {
+            if (!email || !password) {
+                setError("Email y contraseña son obligatorios");
+                return;
+            }
+
+            if (!emailRegex.test(email)) {
+                setError("El email no tiene un formato válido");
+                return;
+            }
+
+            if (password.length < 6) {
+                setError("La contraseña debe tener al menos 6 caracteres");
+                return;
+            }
+        }
+
         try {
             if (isEdit) {
                 await updateDoc(doc(db, "users", userData.id), {
@@ -79,11 +106,6 @@ export const CreateUserModal = ({ onClose, userData }) => {
 
                 toast.success("Usuario actualizado", { theme: "dark" });
             } else {
-                if (!email || !password) {
-                    setError("Email y contraseña son obligatorios");
-                    return;
-                }
-
                 const cred = await createUserWithEmailAndPassword(
                     adminAuth,
                     email,
@@ -101,7 +123,13 @@ export const CreateUserModal = ({ onClose, userData }) => {
             onClose();
         } catch (err) {
             console.error(err);
-            setError("Error al guardar usuario");
+            if (err.code === "auth/email-already-in-use") {
+                setError("El email ya está registrado");
+            } else if (err.code === "auth/invalid-email") {
+                setError("El email no es válido");
+            } else {
+                setError("Error al guardar usuario");
+            }
         }
     };
 

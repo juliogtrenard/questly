@@ -121,6 +121,13 @@ export const CreateCharacterModal = ({ onClose, characterData }) => {
             return;
         }
 
+        const nameRegex = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s'-]+$/;
+
+        if (!nameRegex.test(name)) {
+            setError("El nombre contiene caracteres inválidos");
+            return;
+        }
+
         if (!selectedClass) {
             setError("Debes seleccionar una clase");
             return;
