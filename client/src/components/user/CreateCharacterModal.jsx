@@ -1,17 +1,15 @@
 import { useEffect, useState } from "react";
-import {
-    addDoc,
-    updateDoc,
-    doc,
-    collection,
-    getDocs,
-} from "firebase/firestore";
-import { X } from "lucide-react";
-import { motion } from "framer-motion";
+import { collection, getDocs } from "firebase/firestore";
 import { toast } from "react-toastify";
 import { db } from "../../firebase/firebaseConfig";
 import { useAuth } from "../../context/AuthContext";
 import "../ui/DataModal.css";
+import { BaseModal } from "../ui/BaseModal";
+import { StatsGrid } from "../ui/StatsGrid";
+import { ErrorMessage } from "../ui/ErrorMessage";
+import { FormInput } from "../ui/FormInput";
+import { validateCharacter } from "../../validations/characterValidation";
+import { useCharacters } from "../../hooks/useCharacters";
 
 const INITIAL_STATS = {
     vitality: 0,
@@ -41,6 +39,8 @@ export const CreateCharacterModal = ({ onClose, characterData }) => {
     const { user } = useAuth();
 
     const isEdit = Boolean(characterData);
+
+    const { createCharacter, updateCharacter } = useCharacters();
 
     const [name, setName] = useState("");
     const [classes, setClasses] = useState([]);
@@ -76,7 +76,7 @@ export const CreateCharacterModal = ({ onClose, characterData }) => {
                 const spentPoints = Object.keys(cl.stats).reduce(
                     (acc, stat) =>
                         acc + (characterData.stats[stat] - cl.stats[stat]),
-                    0
+                    0,
                 );
 
                 setRemainingPoints(10 - spentPoints);
@@ -116,42 +116,27 @@ export const CreateCharacterModal = ({ onClose, characterData }) => {
         e.preventDefault();
         setError("");
 
-        if (!name.trim()) {
-            setError("El nombre es obligatorio");
+        const validationError = validateCharacter({ name, selectedClass });
+
+        if (validationError) {
+            setError(validationError);
             return;
         }
 
-        const nameRegex = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s'-]+$/;
-
-        if (!nameRegex.test(name)) {
-            setError("El nombre contiene caracteres inválidos");
-            return;
-        }
-
-        if (!selectedClass) {
-            setError("Debes seleccionar una clase");
-            return;
-        }
+        const payload = {
+            name,
+            classId: selectedClass.id,
+            className: selectedClass.name,
+            stats,
+            userId: user.uid,
+        };
 
         try {
-            const payload = {
-                name,
-                classId: selectedClass.id,
-                className: selectedClass.name,
-                stats,
-                userId: user.uid,
-            };
-
             if (isEdit) {
-                await updateDoc(
-                    doc(db, "characters", characterData.id),
-                    payload
-                );
-
+                await updateCharacter(characterData.id, payload);
                 toast.success("Personaje actualizado", { theme: "dark" });
             } else {
-                await addDoc(collection(db, "characters"), payload);
-
+                await createCharacter(payload);
                 toast.success("Personaje creado", { theme: "dark" });
             }
 
@@ -163,80 +148,52 @@ export const CreateCharacterModal = ({ onClose, characterData }) => {
     };
 
     return (
-        <motion.div
-            className="modal-overlay"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
+        <BaseModal
+            title={isEdit ? "Editar personaje" : "Crear personaje"}
+            onClose={onClose}
         >
-            <motion.div
-                className="modal-content"
-                initial={{ scale: 0.9, opacity: 0, y: 60 }}
-                animate={{ scale: 1, opacity: 1, y: 0 }}
-                exit={{ scale: 0.9, opacity: 0, y: 60 }}
-                transition={{ duration: 0.3, ease: "easeOut" }}
-            >
-                <button className="modal-close" onClick={onClose}>
-                    <X size={20} />
+            <ErrorMessage error={error} />
+
+            <form onSubmit={handleSubmit} className="modal-form">
+                <FormInput
+                    name="name"
+                    placeholder="Nombre del personaje"
+                    value={name}
+                    onChange={setName}
+                />
+
+                <FormInput
+                    type="select"
+                    name="class"
+                    value={selectedClass?.id || ""}
+                    disabled={isEdit}
+                    onChange={handleClassChange}
+                    options={[
+                        { value: "", label: "-- Selecciona una clase --" },
+                        ...classes.map((c) => ({
+                            value: c.id,
+                            label: c.name,
+                        })),
+                    ]}
+                />
+
+                {selectedClass && (
+                    <p>
+                        Puntos restantes: <strong>{remainingPoints}</strong>
+                    </p>
+                )}
+
+                <StatsGrid
+                    stats={stats}
+                    baseStats={selectedClass?.stats}
+                    onChange={handleStatChange}
+                    disabled={!selectedClass}
+                />
+
+                <button type="submit" className="modal-btn">
+                    {isEdit ? "Guardar cambios" : "Crear personaje"}
                 </button>
-
-                <h2>{isEdit ? "Editar personaje" : "Crear personaje"}</h2>
-
-                {error && <p className="error">{error}</p>}
-
-                <form onSubmit={handleSubmit} className="modal-form">
-                    <input
-                        type="text"
-                        placeholder="Nombre del personaje"
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                    />
-
-                    <select
-                        value={selectedClass?.id || ""}
-                        onChange={(e) => handleClassChange(e.target.value)}
-                        disabled={isEdit}
-                    >
-                        <option value="">-- Selecciona una clase --</option>
-                        {classes.map((c) => (
-                            <option key={c.id} value={c.id}>
-                                {c.name}
-                            </option>
-                        ))}
-                    </select>
-
-                    {selectedClass && (
-                        <p>
-                            Puntos restantes: <strong>{remainingPoints}</strong>
-                        </p>
-                    )}
-
-                    <div className="stats-grid">
-                        {Object.entries(stats).map(([stat, value]) => (
-                            <div key={stat} className="stat-input">
-                                <label>
-                                    {stat.charAt(0).toUpperCase() +
-                                        stat.slice(1)}{" "}
-                                    (base {selectedClass?.stats[stat] ?? 0})
-                                </label>
-                                <input
-                                    type="number"
-                                    min={selectedClass?.stats[stat] ?? 0}
-                                    value={value}
-                                    disabled={!selectedClass}
-                                    onChange={(e) =>
-                                        handleStatChange(stat, e.target.value)
-                                    }
-                                />
-                            </div>
-                        ))}
-                    </div>
-
-                    <button type="submit" className="modal-btn">
-                        {isEdit ? "Guardar cambios" : "Crear personaje"}
-                    </button>
-                </form>
-            </motion.div>
-        </motion.div>
+            </form>
+        </BaseModal>
     );
 };

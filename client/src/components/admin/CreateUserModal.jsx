@@ -1,12 +1,11 @@
 import { useState, useEffect } from "react";
-import { createUserWithEmailAndPassword } from "firebase/auth";
-import { setDoc, updateDoc, doc } from "firebase/firestore";
-import { motion } from "framer-motion";
-import { X } from "lucide-react";
-import { db } from "../../firebase/firebaseConfig";
-import { adminAuth } from "../../firebase/adminAuth";
 import { toast } from "react-toastify";
 import "../ui/DataModal.css";
+import { BaseModal } from "../ui/BaseModal";
+import { ErrorMessage } from "../ui/ErrorMessage";
+import { FormInput } from "../ui/FormInput";
+import { validateUser } from "../../validations/userValidation";
+import { useUsers } from "../../hooks/useUsers";
 
 /**
  * Modal para crear o editar un usuario.
@@ -28,6 +27,8 @@ export const CreateUserModal = ({ onClose, userData }) => {
      * @type {boolean}
      */
     const isEdit = Boolean(userData);
+
+    const { createUser, updateUser } = useUsers();
 
     /** @type {[string, Function]} */
     const [username, setUsername] = useState("");
@@ -65,58 +66,24 @@ export const CreateUserModal = ({ onClose, userData }) => {
         e.preventDefault();
         setError("");
 
-        if (!username.trim()) {
-            setError("El nombre de usuario es obligatorio");
+        const validationError = validateUser({
+            username,
+            email,
+            password,
+            isEdit,
+        });
+
+        if (validationError) {
+            setError(validationError);
             return;
-        }
-
-        const usernameRegex = /^[a-zA-Z][a-zA-Z0-9_]{2,19}$/;
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-        if (!usernameRegex.test(username)) {
-            setError(
-                "El usuario debe empezar por letra y solo usar letras, números o _"
-            );
-            return;
-        }
-
-        if (!isEdit) {
-            if (!email || !password) {
-                setError("Email y contraseña son obligatorios");
-                return;
-            }
-
-            if (!emailRegex.test(email)) {
-                setError("El email no tiene un formato válido");
-                return;
-            }
-
-            if (password.length < 6) {
-                setError("La contraseña debe tener al menos 6 caracteres");
-                return;
-            }
         }
 
         try {
             if (isEdit) {
-                await updateDoc(doc(db, "users", userData.id), {
-                    username,
-                    role,
-                });
-
+                await updateUser(userData.id, { username, role });
                 toast.success("Usuario actualizado", { theme: "dark" });
             } else {
-                const cred = await createUserWithEmailAndPassword(
-                    adminAuth,
-                    email,
-                    password
-                );
-
-                await setDoc(doc(db, "users", cred.user.uid), {
-                    username,
-                    role,
-                });
-
+                await createUser({ username, email, password, role });
                 toast.success("Usuario creado", { theme: "dark" });
             }
 
@@ -134,64 +101,55 @@ export const CreateUserModal = ({ onClose, userData }) => {
     };
 
     return (
-        <motion.div
-            className="modal-overlay"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
+        <BaseModal
+            title={isEdit ? "Editar usuario" : "Crear usuario"}
+            onClose={onClose}
         >
-            <motion.div
-                className="modal-content"
-                initial={{ scale: 0.9, opacity: 0, y: 60 }}
-                animate={{ scale: 1, opacity: 1, y: 0 }}
-                exit={{ scale: 0.9, opacity: 0, y: 60 }}
-                transition={{ duration: 0.3, ease: "easeOut" }}
-            >
-                <button className="modal-close" onClick={onClose}>
-                    <X size={18} />
+            <ErrorMessage error={error} />
+
+            <form onSubmit={handleSubmit} className="modal-form">
+                <FormInput
+                    name="username"
+                    placeholder="Nombre de usuario"
+                    value={username}
+                    onChange={setUsername}
+                />
+
+                {!isEdit && (
+                    <>
+                        <FormInput
+                            type="email"
+                            name="email"
+                            placeholder="Email"
+                            value={email}
+                            onChange={setEmail}
+                        />
+
+                        <FormInput
+                            type="password"
+                            name="password"
+                            placeholder="Contraseña"
+                            value={password}
+                            onChange={setPassword}
+                        />
+                    </>
+                )}
+
+                <FormInput
+                    type="select"
+                    name="role"
+                    value={role}
+                    onChange={setRole}
+                    options={[
+                        { value: "user", label: "Usuario" },
+                        { value: "admin", label: "Administrador" },
+                    ]}
+                />
+
+                <button type="submit" className="modal-btn">
+                    Guardar
                 </button>
-
-                <h2>{isEdit ? "Editar usuario" : "Crear usuario"}</h2>
-
-                {error && <p className="error">{error}</p>}
-
-                <form onSubmit={handleSubmit} className="modal-form">
-                    <input
-                        placeholder="Nombre de usuario"
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
-                    />
-
-                    {!isEdit && (
-                        <>
-                            <input
-                                type="email"
-                                placeholder="Email"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                            />
-                            <input
-                                type="password"
-                                placeholder="Contraseña"
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
-                            />
-                        </>
-                    )}
-
-                    <select
-                        value={role}
-                        onChange={(e) => setRole(e.target.value)}
-                    >
-                        <option value="user">Usuario</option>
-                        <option value="admin">Administrador</option>
-                    </select>
-
-                    <button type="submit" className="modal-btn">
-                        Guardar
-                    </button>
-                </form>
-            </motion.div>
-        </motion.div>
+            </form>
+        </BaseModal>
     );
 };

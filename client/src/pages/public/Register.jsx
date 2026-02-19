@@ -76,53 +76,15 @@ export const Register = () => {
             setRepeatPassword("");
         };
 
-        if (!username || !email || !password || !repeatPassword) {
-            setError("Todos los campos son obligatorios");
-            resetPasswords();
-            return;
-        }
+        const validationError = validateRegister({
+            username,
+            email,
+            password,
+            repeatPassword,
+        });
 
-        if (username.length < 2) {
-            setError("El username debe tener al menos 2 caracteres");
-            resetPasswords();
-            return;
-        }
-
-        /**
-         * Expresión regular para validar emails
-         * @type {RegExp}
-         */
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-        if (!emailRegex.test(email)) {
-            setError("Introduce un email válido");
-            resetPasswords();
-            return;
-        }
-
-        if (password.length < 6) {
-            setError("La contraseña debe tener al menos 6 caracteres");
-            resetPasswords();
-            return;
-        }
-
-        /**
-         * Expresión regular para validar contraseña
-         * - Al menos una mayúscula
-         * - Al menos un número
-         */
-        const passwordRegex = /^(?=.*[A-Z])(?=.*\d).+$/;
-
-        if (!passwordRegex.test(password)) {
-            setError(
-                "La contraseña debe tener al menos una mayúscula y un número"
-            );
-            resetPasswords();
-            return;
-        }
-
-        if (password !== repeatPassword) {
-            setError("Las contraseñas no coinciden");
+        if (validationError) {
+            setError(validationError);
             resetPasswords();
             return;
         }
@@ -131,7 +93,7 @@ export const Register = () => {
             const userCredential = await createUserWithEmailAndPassword(
                 auth,
                 email,
-                password
+                password,
             );
 
             const user = userCredential.user;

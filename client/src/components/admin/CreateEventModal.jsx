@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
-import { X } from "lucide-react";
-import { motion } from "framer-motion";
 import { toast } from "react-toastify";
-import { addDoc, collection, doc, updateDoc } from "firebase/firestore";
-import { db } from "../../firebase/firebaseConfig";
 import "../ui/DataModal.css";
+import { BaseModal } from "../ui/BaseModal";
+import { ErrorMessage } from "../ui/ErrorMessage";
+import { FormInput } from "../ui/FormInput";
+import { validateEvent } from "../../validations/eventValidation";
+import { useEvents } from "../../hooks/useEvents";
 
 /**
  * Componente CreateEventModal
@@ -30,6 +31,8 @@ export const CreateEventModal = ({
     event,
     existingEvents,
 }) => {
+    const { createEvent, updateEvent } = useEvents();
+
     /**
      * Estado del formulario
      */
@@ -144,62 +147,24 @@ export const CreateEventModal = ({
         e.preventDefault();
         setError("");
 
-        if (!id.trim() || !title.trim() || !text.trim()) {
-            setError("ID, título y texto son obligatorios");
+        const validationError = validateEvent({ id, title, text, options });
+
+        if (validationError) {
+            setError(validationError);
             return;
-        }
-
-        const eventIdRegex = /^[a-z][a-z0-9_]*$/;
-        const eventTitleRegex = /^[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ\s.,:;!?()'"-]+$/;
-        const eventTextRegex = /^[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ\s.,:;!?()'"-]+$/;
-
-        if (!eventIdRegex.test(id)) {
-            setError(
-                "El ID debe empezar por letra y solo contener letras minúsculas, números y _"
-            );
-            return;
-        }
-
-        if (!eventTitleRegex.test(title)) {
-            setError("El título contiene caracteres inválidos");
-            return;
-        }
-
-        if (!eventTextRegex.test(text)) {
-            setError("El texto del evento contiene caracteres inválidos");
-            return;
-        }
-
-        for (let i = 0; i < options.length; i++) {
-            const opt = options[i];
-
-            if (!opt.text.trim()) {
-                setError(`La opción ${i + 1} no puede estar vacía`);
-                return;
-            }
-
-            if (!eventTextRegex.test(opt.text)) {
-                setError(`La opción ${i + 1} contiene caracteres inválidos`);
-                return;
-            }
         }
 
         const payload = { id, title, text, options };
 
         try {
-            if (event && event.docId) {
-                await updateDoc(doc(db, "events", event.docId), payload);
-
-                toast.success("Evento editado", {
-                    theme: "dark",
-                });
+            if (event?.docId) {
+                await updateEvent(event.docId, payload);
+                toast.success("Evento editado", { theme: "dark" });
             } else {
-                await addDoc(collection(db, "events"), payload);
-
-                toast.success("Evento creado", {
-                    theme: "dark",
-                });
+                await createEvent(payload);
+                toast.success("Evento creado", { theme: "dark" });
             }
+
             onSaved();
         } catch (err) {
             console.error(err);
@@ -208,134 +173,112 @@ export const CreateEventModal = ({
     };
 
     return (
-        <motion.div
-            className="modal-overlay"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
+        <BaseModal
+            title={event ? "Editar evento" : "Crear evento"}
+            onClose={onClose}
         >
-            <motion.div
-                className="modal-content"
-                initial={{ scale: 0.9, opacity: 0, y: 60 }}
-                animate={{ scale: 1, opacity: 1, y: 0 }}
-                exit={{ scale: 0.9, opacity: 0, y: 60 }}
-                transition={{ duration: 0.3, ease: "easeOut" }}
-            >
-                <button className="modal-close" onClick={onClose}>
-                    <X size={18} />
+            <ErrorMessage error={error} />
+
+            <form className="modal-form" onSubmit={handleSubmit}>
+                <FormInput
+                    name="id"
+                    placeholder="ID del evento"
+                    value={id}
+                    onChange={setId}
+                />
+
+                <FormInput
+                    name="title"
+                    placeholder="Título del evento"
+                    value={title}
+                    onChange={setTitle}
+                />
+
+                <FormInput
+                    type="textarea"
+                    name="text"
+                    placeholder="Texto del evento"
+                    value={text}
+                    onChange={setText}
+                    rows={4}
+                />
+
+                <h3>Opciones</h3>
+                {options.map((opt, index) => (
+                    <div key={index} className="option-block">
+                        <FormInput
+                            placeholder="Texto de la opción"
+                            value={opt.text}
+                            onChange={(val) =>
+                                handleOptionChange(index, "text", val)
+                            }
+                        />
+
+                        <FormInput
+                            type="select"
+                            value={opt.nextEventId}
+                            onChange={(val) =>
+                                handleOptionChange(index, "nextEventId", val)
+                            }
+                            options={[
+                                { value: "", label: "-- Evento siguiente --" },
+                                ...existingEvents.map((ev) => ({
+                                    value: ev.id,
+                                    label: ev.title || ev.id,
+                                })),
+                            ]}
+                        />
+
+                        <FormInput
+                            type="select"
+                            value={opt.requirements?.stat || ""}
+                            onChange={(val) =>
+                                handleRequirementChange(index, "stat", val)
+                            }
+                            options={[
+                                {
+                                    value: "",
+                                    label: "-- Estadística requerida --",
+                                },
+                                ...statOptions.map((stat) => ({
+                                    value: stat,
+                                    label: stat,
+                                })),
+                            ]}
+                        />
+
+                        <FormInput
+                            type="number"
+                            min="0"
+                            placeholder="Valor mínimo"
+                            value={opt.requirements?.minValue || ""}
+                            onChange={(val) =>
+                                handleRequirementChange(index, "minValue", val)
+                            }
+                        />
+
+                        <button
+                            type="button"
+                            onClick={() => removeOption(index)}
+                            className="remove-option-btn"
+                        >
+                            Eliminar opción
+                        </button>
+                    </div>
+                ))}
+
+                <button
+                    type="button"
+                    className="add-option-btn"
+                    onClick={addOption}
+                >
+                    Agregar opción
                 </button>
 
-                <h2>{event ? "Editar evento" : "Crear evento"}</h2>
-
-                {error && <p className="error">{error}</p>}
-
-                <form className="modal-form" onSubmit={handleSubmit}>
-                    <input
-                        placeholder="ID del evento (ej: start_forest)"
-                        value={id}
-                        onChange={(e) => setId(e.target.value)}
-                    />
-                    <input
-                        placeholder="Título del evento"
-                        value={title}
-                        onChange={(e) => setTitle(e.target.value)}
-                    />
-                    <textarea
-                        placeholder="Texto del evento"
-                        value={text}
-                        onChange={(e) => setText(e.target.value)}
-                        rows={4}
-                    />
-
-                    <h3>Opciones</h3>
-                    {options.map((opt, index) => (
-                        <div key={index} className="option-block">
-                            <input
-                                placeholder="Texto de la opción"
-                                value={opt.text}
-                                onChange={(e) =>
-                                    handleOptionChange(
-                                        index,
-                                        "text",
-                                        e.target.value
-                                    )
-                                }
-                            />
-                            <select
-                                value={opt.nextEventId}
-                                onChange={(e) =>
-                                    handleOptionChange(
-                                        index,
-                                        "nextEventId",
-                                        e.target.value
-                                    )
-                                }
-                            >
-                                <option value="">-- Evento siguiente --</option>
-                                {existingEvents.map((ev) => (
-                                    <option key={ev.docId} value={ev.id}>
-                                        {ev.title || ev.id}
-                                    </option>
-                                ))}
-                            </select>
-
-                            <select
-                                value={opt.requirements?.stat || ""}
-                                onChange={(e) =>
-                                    handleRequirementChange(
-                                        index,
-                                        "stat",
-                                        e.target.value
-                                    )
-                                }
-                            >
-                                <option value="">
-                                    -- Estadística requerida --
-                                </option>
-                                {statOptions.map((stat) => (
-                                    <option key={stat} value={stat}>
-                                        {stat}
-                                    </option>
-                                ))}
-                            </select>
-
-                            <input
-                                type="number"
-                                min="0"
-                                placeholder="Valor mínimo"
-                                value={opt.requirements?.minValue || ""}
-                                onChange={(e) =>
-                                    handleRequirementChange(
-                                        index,
-                                        "minValue",
-                                        e.target.value
-                                    )
-                                }
-                            />
-
-                            <button
-                                type="button"
-                                onClick={() => removeOption(index)}
-                                className="remove-option-btn"
-                            >
-                                Eliminar opción
-                            </button>
-                        </div>
-                    ))}
-
-                    <button
-                        type="button"
-                        className="add-option-btn"
-                        onClick={addOption}
-                    >
-                        Agregar opción
-                    </button>
-
-                    <button type="submit" className="modal-btn">
-                        Guardar evento
-                    </button>
-                </form>
-            </motion.div>
-        </motion.div>
+                <button type="submit" className="modal-btn">
+                    Guardar evento
+                </button>
+            </form>
+        </BaseModal>
     );
 };

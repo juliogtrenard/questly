@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
-import { addDoc, updateDoc, doc, collection } from "firebase/firestore";
-import { X } from "lucide-react";
-import { motion } from "framer-motion";
 import { toast } from "react-toastify";
-import { db } from "../../firebase/firebaseConfig";
 import "../ui/DataModal.css";
+import { BaseModal } from "../ui/BaseModal";
+import { StatsGrid } from "../ui/StatsGrid";
+import { ErrorMessage } from "../ui/ErrorMessage";
+import { FormInput } from "../ui/FormInput";
+import { validateClass } from "../../validations/classValidation";
+import { useClasses } from "../../hooks/useClasses";
 
 /**
  * Componente CreateClassModal
@@ -26,6 +28,8 @@ export const CreateClassModal = ({ onClose, classData }) => {
      * @type {boolean}
      */
     const isEdit = Boolean(classData);
+
+    const { createClass, updateClass } = useClasses();
 
     /**
      * Estados del formulario
@@ -95,47 +99,22 @@ export const CreateClassModal = ({ onClose, classData }) => {
         e.preventDefault();
         setError("");
 
-        if (!name.trim() || !description.trim()) {
-            setError("Nombre y descripción son obligatorios");
+        const validationError = validateClass({ name, description });
+
+        if (validationError) {
+            setError(validationError);
             return;
         }
 
-        const classNameRegex = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s-]+$/;
-        const descriptionRegex = /^[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ\s.,;:()'"¡!¿?-]+$/;
-
-        if (!classNameRegex.test(name)) {
-            setError("El nombre contiene caracteres inválidos");
-            return;
-        }
-
-        if (!descriptionRegex.test(description)) {
-            setError("La descripción contiene caracteres inválidos");
-            return;
-        }
+        const payload = { name, description, stats };
 
         try {
             if (isEdit) {
-                // Actualizar clase existente
-                await updateDoc(doc(db, "classes", classData.id), {
-                    name,
-                    description,
-                    stats,
-                });
-
-                toast.success("Clase editada", {
-                    theme: "dark",
-                });
+                await updateClass(classData.id, payload);
+                toast.success("Clase actualizada", { theme: "dark" });
             } else {
-                // Crear nueva clase
-                await addDoc(collection(db, "classes"), {
-                    name,
-                    description,
-                    stats,
-                });
-
-                toast.success("Clase creada", {
-                    theme: "dark",
-                });
+                await createClass(payload);
+                toast.success("Clase creada", { theme: "dark" });
             }
 
             onClose(); // Cierra modal y refresca la lista
@@ -146,64 +125,34 @@ export const CreateClassModal = ({ onClose, classData }) => {
     };
 
     return (
-        <motion.div
-            className="modal-overlay"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
+        <BaseModal
+            title={isEdit ? "Editar clase" : "Crear nueva clase"}
+            onClose={onClose}
         >
-            <motion.div
-                className="modal-content"
-                initial={{ scale: 0.9, opacity: 0, y: 60 }}
-                animate={{ scale: 1, opacity: 1, y: 0 }}
-                exit={{ scale: 0.9, opacity: 0, y: 60 }}
-                transition={{ duration: 0.3, ease: "easeOut" }}
-            >
-                <button className="modal-close" onClick={onClose}>
-                    <X size={20} />
+            <ErrorMessage error={error} />
+
+            <form onSubmit={handleSubmit} className="modal-form">
+                <FormInput
+                    name="name"
+                    placeholder="Nombre de la clase"
+                    value={name}
+                    onChange={setName}
+                />
+
+                <FormInput
+                    type="textarea"
+                    name="description"
+                    placeholder="Descripción"
+                    value={description}
+                    onChange={setDescription}
+                />
+
+                <StatsGrid stats={stats} onChange={handleStatChange} />
+
+                <button type="submit" className="modal-btn">
+                    {isEdit ? "Guardar cambios" : "Crear clase"}
                 </button>
-                <h2>{isEdit ? "Editar clase" : "Crear nueva clase"}</h2>
-
-                {error && <p className="error">{error}</p>}
-
-                <form onSubmit={handleSubmit} className="modal-form">
-                    <input
-                        type="text"
-                        placeholder="Nombre de la clase"
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                    />
-                    <textarea
-                        placeholder="Descripción"
-                        value={description}
-                        onChange={(e) => setDescription(e.target.value)}
-                    />
-
-                    <div className="stats-grid">
-                        {Object.entries(stats).map(([stat, value]) => (
-                            <div key={stat} className="stat-input">
-                                <label>
-                                    {stat.charAt(0).toUpperCase() +
-                                        stat.slice(1)}
-                                </label>
-                                <input
-                                    type="number"
-                                    min="0"
-                                    placeholder="Valor mínimo"
-                                    value={value || ""}
-                                    onChange={(e) =>
-                                        handleStatChange(stat, e.target.value)
-                                    }
-                                />
-                            </div>
-                        ))}
-                    </div>
-
-                    <button type="submit" className="modal-btn">
-                        {isEdit ? "Guardar cambios" : "Crear clase"}
-                    </button>
-                </form>
-            </motion.div>
-        </motion.div>
+            </form>
+        </BaseModal>
     );
 };
